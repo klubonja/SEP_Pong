@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.GridPane?>
+
+<Group focusTraversable="true" fx:id="theGroup" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pong.Controller" onKeyReleased="#keyReleasedHandler">
+   <children>
+      <Rectangle fx:id="table" fill="#00b931" height="251"  stroke="BLACK" strokeType="INSIDE" width="400" />
+      <Rectangle fx:id="paddle1" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="50" layoutX="24" layoutY="98" stroke="BLACK" 
+      strokeType="INSIDE" width="10" />
+      <Rectangle fx:id="paddle" arcHeight="5.0" arcWidth="5.0" fill="#fff61f" height="50" layoutX="365.0" layoutY="98.0" stroke="BLACK" strokeType="INSIDE" width="10" />
+      <Rectangle fx:id="paddle3" arcHeight="5.0" arcWidth="5.0" fill="YELLOW" height="10" layoutX="100" layoutY="20" stroke="BLACK" 
+      strokeType="INSIDE" width="50" />
+      <Rectangle fx:id="paddle4" arcHeight="5.0" arcWidth="5.0" fill="ORANGE" height="10" layoutX="101" layoutY="20" stroke="BLACK" 
+      strokeType="INSIDE" width="50" />
+      <Circle fx:id="ball" fill="#ff1f1f" centerX="191.0" centerY="123.0" radius="9" stroke="BLACK" strokeType="INSIDE" />
+   </children>
+</Group>
