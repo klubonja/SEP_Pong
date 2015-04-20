@@ -13,7 +13,7 @@ public class Pong extends Application {
 		try {
 			Parent root = FXMLLoader.load(getClass().getResource("Pong.fxml"));
 
-			  primaryStage.setScene(new Scene(root, 400, 251));
+			  primaryStage.setScene(new Scene(root, 400, 250));
 
 			  primaryStage.show();
 			  root.requestFocus();
