@@ -1,156 +1,90 @@
 package pong;
 
+import Model.*;
 
+import java.util.LinkedList;
+import java.util.List;
+
+
+
+
+
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
+import javafx.animation.ParallelTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.fxml.FXML;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javafx.util.Duration;
-import java.util.*;
 
-import java.util.Random;
-
-public class Controller {
-		
-
-
-		 final int PADDLE_MOVEMENT_INCREMENT = 7;
-		 final int BALL_MOVEMENT_INCREMENT = 3;
-
-		 double centerTableY;
-
-		 DoubleProperty currentPaddleY = new SimpleDoubleProperty();
-		 DoubleProperty currentComputerPaddleY = new SimpleDoubleProperty();
-		 double initialComputerPaddleY;
-
-		 DoubleProperty ballCenterX = new SimpleDoubleProperty();
-		 DoubleProperty ballCenterY = new SimpleDoubleProperty();
-
-		 double allowedPaddleTopY;
-		 double allowedPaddleBottomY;
-
-		 Timeline timeline;
-
-		 @FXML
-		 Rectangle table;
-		 @FXML  Rectangle paddle1;
-		 @FXML  Rectangle paddle;
-		 @FXML  Circle ball;
-
-		 public void initialize()
-		 {
-
-		     currentPaddleY.set(paddle.getLayoutY());
-		     paddle.layoutYProperty().bind(currentPaddleY);
-
-		     ballCenterX.set(ball.getCenterX());
-		     ballCenterY.set(ball.getCenterY());
-
-		     ball.centerXProperty().bind(ballCenterX);
-		     ball.centerYProperty().bind(ballCenterY);
-
-
-		     initialComputerPaddleY = paddle1.getLayoutY();
-		     currentComputerPaddleY.set(initialComputerPaddleY);
-		     paddle1.layoutYProperty().bind(currentComputerPaddleY);
-
-
-		     allowedPaddleTopY = PADDLE_MOVEMENT_INCREMENT;
-		     allowedPaddleBottomY = table.getHeight() - paddle.getHeight() - PADDLE_MOVEMENT_INCREMENT;
-
-		     centerTableY = table.getHeight()/2;
-		 }
-		 @SuppressWarnings("incomplete-switch")
-		public void keyReleasedHandler(KeyEvent event){
-
-		     KeyCode keyCode = event.getCode();
-
-		     switch (keyCode){
-		         case UP:
-		             process_key_Up();
-		             break;
-		         case DOWN:
-		             process_key_Down();
-		             break;
-		         case Q:
-		             Platform.exit(); // Terminate the application
-		             break;
-		         case S:
-		             process_key_S();
-		             break;
-		     }
-		 }
-
-
-		 private void process_key_Up() {
-
-		     if (currentPaddleY.get() > allowedPaddleTopY) {
-		         currentPaddleY.set(currentPaddleY.get() - PADDLE_MOVEMENT_INCREMENT);
-		     }
-		 }
-
-		 private void process_key_Down() {
-
-		     if (currentPaddleY.get()< allowedPaddleBottomY) {
-		         currentPaddleY.set(currentPaddleY.get() + PADDLE_MOVEMENT_INCREMENT);
-		     }
-		 }
-
-
-		 private void process_key_S() {
-
-		     ballCenterY.set(currentPaddleY.doubleValue() + paddle.getHeight()/2);
-		     ballCenterX.set(paddle.getLayoutX());
-
-		     moveTheBall();
-		 }
-
-		 private void moveTheBall(){
-
-		     Random randomYGenerator = new Random();
-		     double randomYincrement = randomYGenerator.nextInt(BALL_MOVEMENT_INCREMENT);
-
-		     final boolean isServingFromTop = (ballCenterY.get() <= centerTableY)?true:false;
-
-		     KeyFrame keyFrame = new KeyFrame(new Duration(100), event -> {
-
-		         if (ballCenterX.get() >= -20) {
-
-		             ballCenterX.set(ballCenterX.get() - BALL_MOVEMENT_INCREMENT);
-
-		             if (isServingFromTop) {
-		                 ballCenterY.set(ballCenterY.get() + randomYincrement);
-
-		                 currentComputerPaddleY.set( currentComputerPaddleY.get() + 0.5);
-
-		             } else {
-		                 ballCenterY.set(ballCenterY.get() - randomYincrement);
-
-		                 currentComputerPaddleY.set(currentComputerPaddleY.get() - 0.5);
-		             }
-
-
-		         } else {
-		             timeline.stop();
-
-		             currentComputerPaddleY.set(initialComputerPaddleY);
-		         }
-		     });
-
-		     timeline = new Timeline(keyFrame);
-		     timeline.setCycleCount(Timeline.INDEFINITE);
-
-		     timeline.play();
-
-		}
-		 
-		}
-		
+public class Controller extends Stage {
 	
+	private ParallelTransition parallel = new ParallelTransition();
+	private Paddle player1;
+	private Paddle player2;
+	private Paddle player3;
+	private Paddle player4;
+	private Group root = new Group();
+	private List<Ball> ballList = new LinkedList<Ball>();
+	public LinkedList<Paddle> paddleList = new LinkedList<Paddle>();
+	
+	Paddle paddle1 = new Paddle(10, 125, 20, 100, Color.BLUE);
+	Paddle paddle2 = new Paddle(580, 125, 20, 100, Color.ORANGE);
+	
+	public Controller(int playerNumber, int ballCount) {
+		this.player1 = paddle1;
+		this.player2 = paddle2;
+		root.setFocusTraversable(true);
+		root.getChildren().addAll(player1, player2);
+		
+		addBall();
+		
+		Scene scene = new Scene(root, 600, 350);
+		scene.setFill(Color.GREEN);
+		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@SuppressWarnings("incomplete-switch")
+			@Override
+			public void handle(KeyEvent evt) {
+				
+				KeyCode keyCode = evt.getCode();
+			
+				switch(keyCode){
+				
+				case UP:
+					player1.moveUp(); break;
+				case DOWN:
+					player1.moveDown(); break;
+				case Q:
+					Platform.exit();
+					}
+				
+			}	
+				
+				
+			
+		});
+		
+		setScene(scene);
+		setResizable(false);
+		show();
+		root.requestFocus();
 
+	}
+	
+	public void addBall() {
+		Ball neu = new Ball(); 
+		neu.setCenterX(600 / 2);
+		neu.setCenterY(350 / 2);
+		root.getChildren().add(neu);
+		ballList.add(neu);
+	}
+	
+}
