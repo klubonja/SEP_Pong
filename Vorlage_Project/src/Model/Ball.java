@@ -10,6 +10,7 @@ public class Ball extends Circle {
 		
 		public final static double radius = 20;
 		public final static double speed = 3;
+		public final double BALL_INCR=5;
 		
 		//Vector x and y of the ball's speed
 		private double xSpeed;
@@ -49,8 +50,8 @@ public class Ball extends Circle {
 		
 		
 		public void move() {
-			super.setCenterX(getCenterX() + xSpeed);
-			super.setCenterY(getCenterY() + ySpeed);
+			super.setCenterX(getCenterX() + BALL_INCR);
+			super.setCenterY(getCenterY() + BALL_INCR);
 			if (getCenterY() + getRadius() * getScaleY() > 350) {
 				setCenterY(350 - getRadius() * getScaleY());
 				ySpeed = -ySpeed;
