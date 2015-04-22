@@ -18,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 public class Controller extends Stage {
@@ -30,9 +31,9 @@ public class Controller extends Stage {
 	private Group root = new Group();
 	
 	Paddle paddle1 = new Paddle(10, 125, 20, 100, Color.BLUE);
-	Paddle paddle2 = new Paddle(580, 125, 20, 100, Color.ORANGE);
+	Paddle paddle2 = new Paddle(570, 125, 20, 100, Color.ORANGE);
 	Paddle paddle3 = new Paddle(250, 10, 100, 20, Color.YELLOW);
-	Paddle paddle4 = new Paddle(250, 330, 100, 20, Color.VIOLET);
+	Paddle paddle4 = new Paddle(250, 320, 100, 20, Color.VIOLET);
 	
 
 	public Controller(int playerNumber, int ballCount) {
@@ -56,7 +57,11 @@ public class Controller extends Stage {
 		
 		root.setFocusTraversable(true);
 		
-		addBall();
+		
+		
+		for(int i=0; i<ballCount; i++){
+			addBall();
+		}
 
 		Duration moveBalls = Duration.millis(16);
 		final KeyFrame moveBallsFrame = new KeyFrame(moveBalls, new EventHandler<ActionEvent>() {
@@ -104,6 +109,7 @@ public class Controller extends Stage {
 		
 		setScene(pongBoard);
 		setResizable(false);
+		initStyle(StageStyle.UNDECORATED);
 		show();
 		root.requestFocus();
 

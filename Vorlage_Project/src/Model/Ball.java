@@ -8,9 +8,9 @@ import javafx.scene.shape.Circle;
 
 public class Ball extends Circle {
 		
-		public final static double radius = 20;
-		public final static double speed = 3;
-		public final double BALL_INCR=5;
+		public final static int BALL_INCR=5;
+		public final static double RADIUS = 20;
+		
 		
 		//Vector x and y of the ball's speed
 		private double xSpeed;
@@ -19,12 +19,12 @@ public class Ball extends Circle {
 		
 		//Constructor called in Controller which directs to the real constructor
 		public Ball() {
-			this(speed, 0, Color.RED);
+			this(BALL_INCR, 0, Color.RED);
 		}
 		
 		public Ball(double xSpeed, double ySpeed, Color color) {
 			super();
-			setRadius(radius);
+			setRadius(RADIUS);
 			setFill(color);
 			this.xSpeed = xSpeed;
 			this.ySpeed = ySpeed;
@@ -50,14 +50,17 @@ public class Ball extends Circle {
 		
 		
 		public void move() {
-			super.setCenterX(getCenterX() + BALL_INCR);
-			super.setCenterY(getCenterY() + BALL_INCR);
-			if (getCenterY() + getRadius() * getScaleY() > 350) {
-				setCenterY(350 - getRadius() * getScaleY());
+			Random randomGenerator = new Random();
+			int xBallIncr = randomGenerator.nextInt(100);
+			int yBallIncr = randomGenerator.nextInt(100);
+			this.setCenterX(getCenterX() + xBallIncr);
+			this.setCenterY(getCenterY() + yBallIncr);
+			if (getCenterY() + getRadius() > 350) {
+				setCenterY(350 - getRadius());
 				ySpeed = -ySpeed;
 			}
-			if (getCenterY() - getRadius() * getScaleY() < 0) {
-				setCenterY(getRadius() * getScaleY());
+			if (getCenterY() - getRadius() < 0) {
+				setCenterY(getRadius());
 				ySpeed = -ySpeed;
 			}
 		}
