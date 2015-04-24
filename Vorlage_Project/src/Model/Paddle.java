@@ -6,7 +6,7 @@ import javafx.scene.shape.Rectangle;
 
 public class Paddle extends Rectangle {
 	
-	public final int PADDLE_MOVEMENT = 10;
+	public final int PADDLE_MOVEMENT = 15;
 	
 
 	public Paddle(double x, double y, double width, double height, Color color){
@@ -14,9 +14,6 @@ public class Paddle extends Rectangle {
 		setX(x);
 		setY(y);
 		}
-	
-	
-	
 	
 	public void moveUp() {
 		setY(getY() - PADDLE_MOVEMENT);

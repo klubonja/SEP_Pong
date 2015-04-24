@@ -8,7 +8,7 @@ import javafx.scene.shape.Circle;
 
 public class Ball extends Circle {
 		
-		public final static int BALL_INCR=5;
+		public final static int BALL_INCR = 5;
 		public final static double RADIUS = 20;
 		
 		
@@ -19,13 +19,15 @@ public class Ball extends Circle {
 		
 		//Constructor called in Controller which directs to the real constructor
 		public Ball() {
-			this(BALL_INCR, 0, Color.RED);
+			this(BALL_INCR, -10, Color.RED);
 		}
 		
 		public Ball(double xSpeed, double ySpeed, Color color) {
 			super();
 			setRadius(RADIUS);
 			setFill(color);
+			setCenterX(300);
+			setCenterY(175);
 			this.xSpeed = xSpeed;
 			this.ySpeed = ySpeed;
 		}
@@ -51,10 +53,8 @@ public class Ball extends Circle {
 		
 		public void move() {
 			Random randomGenerator = new Random();
-			int xBallIncr = randomGenerator.nextInt(100);
-			int yBallIncr = randomGenerator.nextInt(100);
-			this.setCenterX(getCenterX() + xBallIncr);
-			this.setCenterY(getCenterY() + yBallIncr);
+			this.setCenterX(getCenterX() + xSpeed);
+			this.setCenterY(getCenterY() + ySpeed);
 			if (getCenterY() + getRadius() > 350) {
 				setCenterY(350 - getRadius());
 				ySpeed = -ySpeed;
