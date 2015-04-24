@@ -10,7 +10,7 @@ public class Ball extends Circle {
 		
 		public final static int BALL_INCR = 5;
 		public final static double RADIUS = 20;
-		
+
 		
 		//Vector x and y of the ball's speed
 		private double xSpeed;

@@ -15,6 +15,8 @@ public class Paddle extends Rectangle {
 		setY(y);
 		}
 	
+
+	
 	public void moveUp() {
 		setY(getY() - PADDLE_MOVEMENT);
 		if (getY() < 0) {
