@@ -40,8 +40,8 @@ public class Controller extends Stage {
 	Paddle paddle3 = new Paddle(250, 10, 100, 20, Color.YELLOW);
 	Paddle paddle4 = new Paddle(250, 320, 100, 20, Color.VIOLET);
 	
-	final SimpleStringProperty resultLeft = new SimpleStringProperty();
-	final SimpleStringProperty resultRight = new SimpleStringProperty();
+	final SimpleStringProperty resultLeft = new SimpleStringProperty("0");
+	final SimpleStringProperty resultRight = new SimpleStringProperty("0");
 	
 
 	public Controller(int playerNumber, int ballCount) {
@@ -73,40 +73,41 @@ public class Controller extends Stage {
 			root.getChildren().addAll(player1, player2, player3, player4); break;	
 		}
 		
+		if(!pl3 && !pl4){
+			Label resultL = new Label("0");
+			resultL.setTranslateX(290);
+			resultL.setTranslateY(300);
+			resultL.textProperty().bind(resultLeft);
+			Label resultR = new Label("0");
+			resultR.setTranslateX(310);
+			resultR.setTranslateY(300);
+			resultR.textProperty().bind(resultRight);
+			root.getChildren().addAll(resultL, resultR);
+			}
 		root.setFocusTraversable(true);
 		
 		for(int i=0; i<ballCount; i++){
-			
 			addBall();
 			}
 
-		Duration moveBalls = Duration.millis(16);
-		final KeyFrame moveBallsFrame = new KeyFrame(moveBalls, new EventHandler<ActionEvent>() {
+
+		final KeyFrame moveBallsFrame = new KeyFrame(new Duration(16), new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
 				for (Ball ball : ballList) {
 					ball.move();
 				}
 				
-				//resultRight.set("1");
 				checkCollision();
 				checkScore();
 			}
 		});
+		
+		
 		Timeline bmove = new Timeline();
 		bmove.setCycleCount(Animation.INDEFINITE);
 		bmove.getKeyFrames().add(moveBallsFrame);
 		bmove.play();
-		
-		Label resultL = new Label("0");
-		resultL.setTranslateX(290);
-		resultL.setTranslateY(300);
-		resultL.textProperty().bind(resultLeft);
-		Label resultR = new Label("0");
-		resultR.setTranslateX(310);
-		resultR.setTranslateY(300);
-		resultR.textProperty().bind(resultRight);
-		root.getChildren().addAll(resultL, resultR);
 		
 		
 		
@@ -125,17 +126,14 @@ public class Controller extends Stage {
 					player1.moveUp(); break;
 				case DOWN:
 					player1.moveDown(); break;
-				
-		/*		case RIGHT:
-					player3.moveRight(); break;
-				case LEFT:
-					player3.moveLeft(); break;
-				2 Players on 1 PC?
 		 		case W:
 					player2.moveUp(); break;
 				case S:
 					player2.moveDown(); break;
-		*/		
+				case RIGHT:
+					player3.moveRight(); break;
+				case LEFT:
+					player3.moveLeft(); break;
 				case B:
 					addBall(); break;
 				case Q:
@@ -146,42 +144,56 @@ public class Controller extends Stage {
 				
 		});
 		
-		setScene(pongBoard);
-		setResizable(false);
-		initStyle(StageStyle.UNDECORATED);
-		show();
-		root.requestFocus();
+		this.setScene(pongBoard);
+		this.setResizable(false);
+		this.initStyle(StageStyle.UNDECORATED);
+		this.show();
+		this.root.requestFocus();
 
 	}
 	
 	
 	public void addBall() {
-		Ball neu = new Ball(); 
-		ballList.add(neu);
-		root.getChildren().add(neu);
+		Ball newBall = new Ball(); 
+		ballList.add(newBall);
+		root.getChildren().add(newBall);
 	}
 	
 	public void checkScore(){
+		if(!pl3 && !pl4){
 		for (Ball ball : ballList){
-			if(ball.getCenterX()>=600){
-				//resultLeft.set("" + Integer.parseInt(resultLeft.get()) + 1);
+			if(ball.getCenterX()>=630){
+				ballList.remove(ball);
+				resultLeft.set("" + (Integer.parseInt(resultLeft.get()) + 1));
 			}
-			if(ball.getCenterX()<=0){
-				//resultRight.set("" + Integer.parseInt(resultRight.get()) + 1);
+			if(ball.getCenterX()<=-30){
+				ballList.remove(ball);
+				resultRight.set("" + (Integer.parseInt(resultRight.get()) + 1));
 				
 			}
+		}
 		}
 	}
 			
 	private void checkCollision() {
 		for (Ball ball : ballList) {
 			if (pl1 && ball.getBoundsInParent().intersects(player1.getBoundsInParent())) {
-				ball.collision();
+				ball.collisionHorizontal();
 				ball.move();
 				continue;
 			}
-			if (pl2 && ball.getBoundsInParent().intersects(player2.getBoundsInParent())) {
-				ball.collision();
+			else if (pl2 && ball.getBoundsInParent().intersects(player2.getBoundsInParent())) {
+				ball.collisionHorizontal();
+				ball.move();
+				continue;
+			}
+			else if (pl3 && ball.getBoundsInParent().intersects(player3.getBoundsInParent())) {
+				ball.collisionVertical();
+				ball.move();
+				continue;
+			}
+			else if (pl4 && ball.getBoundsInParent().intersects(player4.getBoundsInParent())) {
+				ball.collisionVertical();
 				ball.move();
 				continue;
 			}

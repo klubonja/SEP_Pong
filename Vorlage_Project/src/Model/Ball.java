@@ -8,7 +8,7 @@ import javafx.scene.shape.Circle;
 
 public class Ball extends Circle {
 		
-		public final static int BALL_INCR = 5;
+		public final static int BALL_INCR = 4;
 		public final static double RADIUS = 20;
 
 		
@@ -19,7 +19,9 @@ public class Ball extends Circle {
 		
 		//Constructor called in Controller which directs to the real constructor
 		public Ball() {
-			this(BALL_INCR, -10, Color.RED);
+			this(BALL_INCR, 0, Color.RED);
+			//randomizeXSpeed();
+			randomizeYSpeed();
 		}
 		
 		public Ball(double xSpeed, double ySpeed, Color color) {
@@ -32,27 +34,48 @@ public class Ball extends Circle {
 			this.ySpeed = ySpeed;
 		}
 		
+		public double getXSpeed() {
+			return this.xSpeed;
+		}
+		
+		public double getYSpeed() {
+			return this.ySpeed;
+		}
+		
 		//Changes the direction of the speed vector in the oposite way
-		public void changeDirection() {
+		public void changeXDirection() {
 			this.xSpeed = -xSpeed;
+		}
+		
+		public void changeYDirection(){
+			this.ySpeed = -ySpeed;
 		}
 		
 		
 		//Gives a new random direction to the y vector
 		public void randomizeYSpeed() {
 			Random random = new Random();
-			ySpeed = ySpeed + random.nextDouble() - .5;
+			this.ySpeed = ySpeed - random.nextDouble() - 0.5;
+		}
+		
+		public void randomizeXSpeed() {
+			Random random = new Random();
+			this.xSpeed = xSpeed + random.nextDouble() - 0.5;
 		}
 		
 		//Collision is implemented as a complete change of direction with random y-component
-		public void collision() {
-			changeDirection();
+		public void collisionHorizontal() {
+			changeXDirection();
 			randomizeYSpeed();
+		}
+		
+		public void collisionVertical() {
+			changeYDirection();
+			randomizeXSpeed();
 		}
 		
 		
 		public void move() {
-			Random randomGenerator = new Random();
 			this.setCenterX(getCenterX() + xSpeed);
 			this.setCenterY(getCenterY() + ySpeed);
 			if (getCenterY() + getRadius() > 350) {
@@ -63,15 +86,6 @@ public class Ball extends Circle {
 				setCenterY(getRadius());
 				ySpeed = -ySpeed;
 			}
-		}
-		
-		
-		public double getXSpeed() {
-			return xSpeed;
-		}
-		
-		public double getYSpeed() {
-			return ySpeed;
 		}
 
 	}

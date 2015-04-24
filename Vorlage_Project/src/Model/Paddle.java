@@ -32,4 +32,15 @@ public class Paddle extends Rectangle {
 		}
 	}
 	
+	public void moveRight(){
+		setX(getX() + PADDLE_MOVEMENT);
+		
+		
+	}
+	
+	public void moveLeft(){
+		setX(getX() - PADDLE_MOVEMENT);
+		
+	}
+	
 }

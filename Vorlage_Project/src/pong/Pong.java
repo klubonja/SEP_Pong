@@ -10,11 +10,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 
 public class Pong extends Application {
@@ -37,6 +34,9 @@ public class Pong extends Application {
 			root.setPadding(new Insets(10));
 			root.setAlignment(Pos.CENTER);
 			root.setStyle("-fx-background-color: radial-gradient( radius 100%, snow, skyblue, mediumturquoise)");
+			
+			Scene scene = new Scene(root, 600, 300);
+			scene.getStylesheets().add(getClass().getResource("pong.css").toExternalForm());
 		    
 		    Label title = new Label("PingPong");
 		    title.setStyle("-fx-font-size: 36");
@@ -66,18 +66,18 @@ public class Pong extends Application {
 		   
 			startGame.setOnMouseClicked(new EventHandler<MouseEvent>() {
 				@Override
-				public void handle(MouseEvent e) {
+				public void handle(MouseEvent e)  {
 					int numberOfPlayers = Integer.parseInt(playerNumber.getText());
 					int numberOfBalls = Integer.parseInt(ballNumber.getText());
-					if(numberOfPlayers<=4 && numberOfPlayers>0){
+					if(numberOfPlayers<=4 && numberOfPlayers>0 && numberOfBalls>0){
 					System.out.println("Playing with " + numberOfPlayers + " players and " + numberOfBalls + " balls.");
-					selectedGameStart = new Controller(numberOfPlayers, numberOfBalls);}
+					selectedGameStart = new Controller(numberOfPlayers, numberOfBalls);
+					primaryStage.close();}
 					else footerError.set("Invalid number of players.");
 				}
 			});
 			
-			
-			Scene scene = new Scene(root, 600, 300);
+		
 			//primaryStage.initStyle(StageStyl+e.UNDECORATED);
 			primaryStage.setTitle("PingPong");
 			primaryStage.setScene(scene);
