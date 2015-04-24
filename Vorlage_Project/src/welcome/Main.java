@@ -30,7 +30,7 @@ public class Main extends Application {
 		final Ball ball = new Ball();
 		final Paddle player1 = new Paddle();
 
-		final Group root = new Group(background, ball.group, player1.group);
+		final Group root = new Group(background, ball.grp, player1.grp);
 
 		Scene scene = new Scene(root, WIDTH, HEIGHT);
 

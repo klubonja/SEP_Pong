@@ -1,21 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.GridPane?>
 
-<Group focusTraversable="true" fx:id="theGroup" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pong.Controller" onKeyReleased="#keyReleasedHandler">
+<Group fx:id="group" focusTraversable="true" onKeyPressed="#keyPressedHandler" onKeyReleased="#keyReleasedHandler" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pong.Mechanics">
    <children>
-      <Rectangle fx:id="table" fill="#00b931" height="251"  stroke="BLACK" strokeType="INSIDE" width="400" />
-      <Rectangle fx:id="paddle1" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="50" layoutX="24" layoutY="98" stroke="BLACK" 
-      strokeType="INSIDE" width="10" />
-      <Rectangle fx:id="paddle" arcHeight="5.0" arcWidth="5.0" fill="#fff61f" height="50" layoutX="365.0" layoutY="98.0" stroke="BLACK" strokeType="INSIDE" width="10" />
-      <Rectangle fx:id="paddle3" arcHeight="5.0" arcWidth="5.0" fill="YELLOW" height="10" layoutX="100" layoutY="20" stroke="BLACK" 
-      strokeType="INSIDE" width="50" />
-      <Rectangle fx:id="paddle4" arcHeight="5.0" arcWidth="5.0" fill="ORANGE" height="10" layoutX="101" layoutY="20" stroke="BLACK" 
-      strokeType="INSIDE" width="50" />
-      <Circle fx:id="ball" fill="#ff1f1f" centerX="191.0" centerY="123.0" radius="9" stroke="BLACK" strokeType="INSIDE" />
+      <ImageView fitHeight="770.0" fitWidth="1000.0" pickOnBounds="true">
+         <image>
+            <Image url="@../../bin/pong/Hintergrund.png" />
+         </image>
+      </ImageView>
+      <Circle fx:id="ball" centerX="500.0" centerY="385.0" fill="WHITE" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+      <ImageView fx:id="fire1Up" fitHeight="57.0" fitWidth="29.0" layoutX="940.0" layoutY="250.0" onKeyPressed="#keyPressedHandler" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../bin/pong/Player1FeuerUp.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="player1" disable="true" fitHeight="196.0" fitWidth="29.0" layoutX="940.0" layoutY="304.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../bin/pong/Schlaeger.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="fire1Down" fitHeight="57.0" fitWidth="29.0" layoutX="940.0" layoutY="499.0" onKeyPressed="#keyPressedHandler" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../bin/pong/Player1FeuerDown.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="fire2Up" fitHeight="57.0" fitWidth="29.0" layoutX="10.0" layoutY="250.0" onKeyPressed="#keyPressedHandler" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../bin/pong/Player2FeuerUp.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="player2" fitHeight="196.0" fitWidth="29.0" layoutX="10.0" layoutY="304.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../bin/pong/Schlaeger2.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="fire2Down" fitHeight="57.0" fitWidth="29.0" layoutX="10.0" layoutY="499.0" onKeyPressed="#keyPressedHandler" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../bin/pong/Player2FeuerDown.png" />
+         </image>
+      </ImageView>
+      <Line fx:id="top" endX="995.0" endY="35.0" startY="35.0" stroke="#bfb781" strokeWidth="5.0" />
+      <Line fx:id="bot" endX="995.0" endY="733.0" startY="733.0" stroke="#bfb781" strokeWidth="5.0" />
+      <MenuBar maxWidth="1000.0" minWidth="1000.0" prefHeight="0.0" prefWidth="1000.0">
+         <menus>
+            <Menu text="File">
+               <items>
+                  <MenuItem onAction="#menuSelector" text="New Game (N)" />
+                  <MenuItem onAction="#menuSelector" text="Exit (E)" />
+               </items>
+            </Menu>
+            <Menu text="Help">
+               <items>
+                  <MenuItem text="About" />
+                  <MenuItem text="How to play" />
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
+      <MenuBar focusTraversable="false" layoutY="737.0" maxWidth="1000.0" minWidth="1000.0" prefHeight="0.0" prefWidth="1000.0">
+        <menus>
+          <Menu disable="true" mnemonicParsing="false" text="Gestreifte Remulaner Pong v1.0">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
    </children>
 </Group>
