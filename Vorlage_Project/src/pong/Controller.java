@@ -95,6 +95,17 @@ public class Controller extends Stage {
 					player1.moveUp(); break;
 				case DOWN:
 					player1.moveDown(); break;
+				
+		/*		case RIGHT:
+					player3.moveRight(); break;
+				case LEFT:
+					player3.moveLeft(); break;
+				2 Players on 1 PC?
+		 		case W:
+					player2.moveUp(); break;
+				case S:
+					player2.moveDown(); break;
+		*/		
 				case B:
 					addBall(); break;
 				case Q:

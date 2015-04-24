@@ -16,8 +16,6 @@ public class Paddle extends Rectangle {
 		}
 	
 	
-	
-	
 	public void moveUp() {
 		setY(getY() - PADDLE_MOVEMENT);
 		if (getY() < 0) {
@@ -33,4 +31,22 @@ public class Paddle extends Rectangle {
 		}
 	}
 	
+	/*
+	// 	Players 3,4:
+	 	
+	 	public void moveLeft() {
+		setX(getX() - PADDLE_MOVEMENT);
+		if (getX() < 0) {
+			setX(0);
+		}
+	}
+	
+	
+	public void moveRight() {
+		setX(getX() + PADDLE_MOVEMENT);
+		if (getX() + getWidth() > 600) {
+			setX(600 - getWidth());
+		}
+	}
+	 */
 }
