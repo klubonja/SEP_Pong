@@ -10,14 +10,18 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -40,8 +44,9 @@ public class Controller extends Stage {
 	Paddle paddle3 = new Paddle(250, 10, 100, 20, Color.YELLOW);
 	Paddle paddle4 = new Paddle(250, 320, 100, 20, Color.VIOLET);
 	
-	final SimpleStringProperty resultLeft = new SimpleStringProperty("0");
-	final SimpleStringProperty resultRight = new SimpleStringProperty("0");
+	final StringProperty resultLeft = new SimpleStringProperty("0");
+	final StringProperty resultRight = new SimpleStringProperty("0");
+	final StringProperty winMsg = new SimpleStringProperty("");
 	
 
 	public Controller(int playerNumber, int ballCount) {
@@ -75,14 +80,23 @@ public class Controller extends Stage {
 		
 		if(!pl3 && !pl4){
 			Label resultL = new Label("0");
-			resultL.setTranslateX(290);
+			resultL.setTranslateX(250);
 			resultL.setTranslateY(300);
+			resultL.setTextFill(Color.WHITE);
+			resultL.setFont(Font.font("Consolas", FontWeight.BOLD, 30));
 			resultL.textProperty().bind(resultLeft);
 			Label resultR = new Label("0");
-			resultR.setTranslateX(310);
+			resultR.setTranslateX(330);
 			resultR.setTranslateY(300);
+			resultR.setTextFill(Color.WHITE);
+			resultR.setFont(Font.font("Consolas", FontWeight.BOLD, 30));
 			resultR.textProperty().bind(resultRight);
-			root.getChildren().addAll(resultL, resultR);
+			Label win = new Label("Player 1 Wins");
+			win.setTranslateX(195);
+			win.setTranslateY(160);
+			win.setFont(Font.font("Consolas", 30));
+			win.textProperty().bind(winMsg);
+			root.getChildren().addAll(resultL, resultR, win);
 			}
 		root.setFocusTraversable(true);
 		
@@ -169,30 +183,33 @@ public class Controller extends Stage {
 			if(ball.getCenterX()<=-30){
 				ballList.remove(ball);
 				resultRight.set("" + (Integer.parseInt(resultRight.get()) + 1));
-				
-			}
+				}
+			
+			if(Integer.parseInt(resultLeft.get()) >= 21){
+				winMsg.set("Player 1 wins");
+			 }
 		}
 		}
 	}
 			
 	private void checkCollision() {
 		for (Ball ball : ballList) {
-			if (pl1 && ball.getBoundsInParent().intersects(player1.getBoundsInParent())) {
+			if (pl1 && ball.getLayoutBounds().intersects(player1.getLayoutBounds())) {
 				ball.collisionHorizontal();
 				ball.move();
 				continue;
 			}
-			else if (pl2 && ball.getBoundsInParent().intersects(player2.getBoundsInParent())) {
+			else if (pl2 && ball.getLayoutBounds().intersects(player2.getLayoutBounds())) {
 				ball.collisionHorizontal();
 				ball.move();
 				continue;
 			}
-			else if (pl3 && ball.getBoundsInParent().intersects(player3.getBoundsInParent())) {
+			else if (pl3 && ball.getLayoutBounds().intersects(player3.getLayoutBounds())) {
 				ball.collisionVertical();
 				ball.move();
 				continue;
 			}
-			else if (pl4 && ball.getBoundsInParent().intersects(player4.getBoundsInParent())) {
+			else if (pl4 && ball.getLayoutBounds().intersects(player4.getLayoutBounds())) {
 				ball.collisionVertical();
 				ball.move();
 				continue;
