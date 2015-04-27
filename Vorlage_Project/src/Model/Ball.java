@@ -8,9 +8,9 @@ import javafx.scene.shape.Circle;
 
 public class Ball extends Circle {
 		
-		public final static double radius = 20;
-		public final static double speed = 5;
-		public final double BALL_INCR=5;
+		public final static int BALL_INCR=5;
+		public final static double RADIUS = 20;
+		
 		
 		//Vector x and y of the ball's speed
 		private double xSpeed;
@@ -19,18 +19,18 @@ public class Ball extends Circle {
 		
 		//Constructor called in Controller which directs to the real constructor
 		public Ball() {
-			this(speed, speed, Color.RED);
+			this(BALL_INCR, 0, Color.RED);
 		}
 		
 		public Ball(double xSpeed, double ySpeed, Color color) {
 			super();
-			setRadius(radius);
+			setRadius(RADIUS);
 			setFill(color);
 			this.xSpeed = xSpeed;
 			this.ySpeed = ySpeed;
 		}
 		
-		//Changes the direction of the speed vector in the opposite way
+		//Changes the direction of the speed vector in the oposite way
 		public void changeDirection() {
 			this.xSpeed = -xSpeed;
 		}
@@ -50,27 +50,19 @@ public class Ball extends Circle {
 		
 		
 		public void move() {
-			super.setCenterX(getCenterX() + xSpeed);
-			super.setCenterY(getCenterY() + ySpeed);
-			
-			// bottom/top Collision
-			if(getCenterY()>= 350 - getRadius()||getCenterY()<= 0 + getRadius()){
-				ySpeed *= -1;
-			}
-			
-			// rechts/links Collision
-			if(getCenterX()>= 600 - getRadius()||getCenterX()<= 0 + getRadius()){
-				xSpeed *= -1;
-			}
-			
-		/*	if (getCenterY() + getRadius() * getScaleY() > 350) {
-				setCenterY(350 - getRadius() * getScaleY());
+			Random randomGenerator = new Random();
+			int xBallIncr = randomGenerator.nextInt(100);
+			int yBallIncr = randomGenerator.nextInt(100);
+			this.setCenterX(getCenterX() + xBallIncr);
+			this.setCenterY(getCenterY() + yBallIncr);
+			if (getCenterY() + getRadius() > 350) {
+				setCenterY(350 - getRadius());
 				ySpeed = -ySpeed;
 			}
-			if (getCenterY() - getRadius() * getScaleY() < 0) {
-				setCenterY(getRadius() * getScaleY());
+			if (getCenterY() - getRadius() < 0) {
+				setCenterY(getRadius());
 				ySpeed = -ySpeed;
-			}*/
+			}
 		}
 		
 		
@@ -83,3 +75,4 @@ public class Ball extends Circle {
 		}
 
 	}
+

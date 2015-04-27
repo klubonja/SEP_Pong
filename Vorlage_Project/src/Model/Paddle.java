@@ -6,7 +6,7 @@ import javafx.scene.shape.Rectangle;
 
 public class Paddle extends Rectangle {
 	
-	public final int PADDLE_MOVEMENT = 10;
+	public final int PADDLE_MOVEMENT = 15;
 	
 
 	public Paddle(double x, double y, double width, double height, Color color){
@@ -15,6 +15,7 @@ public class Paddle extends Rectangle {
 		setY(y);
 		}
 	
+
 	
 	public void moveUp() {
 		setY(getY() - PADDLE_MOVEMENT);
@@ -31,22 +32,15 @@ public class Paddle extends Rectangle {
 		}
 	}
 	
-	/*
-	// 	Players 3,4:
-	 	
-	 	public void moveLeft() {
-		setX(getX() - PADDLE_MOVEMENT);
-		if (getX() < 0) {
-			setX(0);
-		}
-	}
-	
-	
-	public void moveRight() {
+	public void moveRight(){
 		setX(getX() + PADDLE_MOVEMENT);
-		if (getX() + getWidth() > 600) {
-			setX(600 - getWidth());
-		}
+		
+		
 	}
-	 */
+	
+	public void moveLeft(){
+		setX(getX() - PADDLE_MOVEMENT);
+		
+	}
+	
 }
