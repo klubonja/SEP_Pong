@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javafx.animation.Animation;
+import javafx.animation.FillTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -13,13 +14,13 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
@@ -38,6 +39,7 @@ public class Controller extends Stage {
 	private boolean pl4;
 	private List<Ball> ballList = new LinkedList<Ball>();
 	private Group root = new Group();
+	private Rectangle field = new Rectangle(600, 350, Color.GREEN);
 	
 	Paddle paddle1 = new Paddle(10, 125, 20, 100, Color.BLUE);
 	Paddle paddle2 = new Paddle(570, 125, 20, 100, Color.ORANGE);
@@ -50,6 +52,8 @@ public class Controller extends Stage {
 	
 
 	public Controller(int playerNumber, int ballCount) {
+		
+		root.getChildren().add(field);
 		
 		this.player1 = paddle1;
 		this.player2 = paddle2;
@@ -148,6 +152,10 @@ public class Controller extends Stage {
 					player3.moveRight(); break;
 				case LEFT:
 					player3.moveLeft(); break;
+				case A:
+					player4.moveRight(); break;
+				case D: 
+					player4.moveLeft(); break;
 				case B:
 					addBall(); break;
 				case Q:
@@ -186,7 +194,11 @@ public class Controller extends Stage {
 				}
 			
 			if(Integer.parseInt(resultLeft.get()) >= 21){
-				winMsg.set("Player 1 wins");
+				winnerTransition(1);
+			 }
+			
+			if(Integer.parseInt(resultLeft.get()) >= 21){
+				winnerTransition(2);
 			 }
 		}
 		}
@@ -216,6 +228,19 @@ public class Controller extends Stage {
 			}
 		}
 		return;
+	}
+	
+	public void winnerTransition(int i){
+		
+		winMsg.set("Player " + i + " wins!");
+		
+		FillTransition ft = new FillTransition(Duration.millis(3000), field, Color.GREEN, Color.FUCHSIA);
+	     ft.setCycleCount(10);
+	     ft.setAutoReverse(true);
+	     ft.play();
+		
+		
+		
 	}
 			
 

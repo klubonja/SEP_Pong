@@ -36,7 +36,7 @@ public class Pong extends Application {
 			root.setStyle("-fx-background-color: radial-gradient( radius 100%, snow, skyblue, mediumturquoise)");
 			
 			Scene scene = new Scene(root, 600, 300);
-			scene.getStylesheets().add(getClass().getResource("pong.css").toExternalForm());
+			//scene.getStylesheets().add(getClass().getResource("pong.css").toExternalForm());
 		    
 		    Label title = new Label("PingPong");
 		    title.setStyle("-fx-font-size: 36");
