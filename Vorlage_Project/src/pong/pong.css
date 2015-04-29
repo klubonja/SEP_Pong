@@ -1,0 +1,12 @@
+.score{
+   -fx-text-fill: white;
+   -fx-font-family:verdana;
+   -fx-font-style:italic;
+   -fx-font-size: 20;
+}
+
+.scored {
+  -fx-font-family: arial;
+  -fx-font-weight: bold;
+  -fx-font-size: 30;
+}
