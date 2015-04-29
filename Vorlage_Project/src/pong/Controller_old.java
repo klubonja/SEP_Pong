@@ -26,30 +26,30 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
-public class Controller extends Stage {
+public class Controller_old extends Stage {
 
-	private Paddle player1;
+	private Paddle_old player1;
 	private boolean pl1;
-	private Paddle player2;
+	private Paddle_old player2;
 	private boolean pl2;
-	private Paddle player3;
+	private Paddle_old player3;
 	private boolean pl3;
-	private Paddle player4;
+	private Paddle_old player4;
 	private boolean pl4;
-	private List<Ball> ballList = new LinkedList<Ball>();
+	private List<Ball_old> ballList = new LinkedList<Ball_old>();
 	private Group root = new Group();
 	
-	Paddle paddle1 = new Paddle(10, 125, 20, 100, Color.BLUE);
-	Paddle paddle2 = new Paddle(570, 125, 20, 100, Color.ORANGE);
-	Paddle paddle3 = new Paddle(250, 10, 100, 20, Color.YELLOW);
-	Paddle paddle4 = new Paddle(250, 320, 100, 20, Color.VIOLET);
+	Paddle_old paddle1 = new Paddle_old(10, 125, 20, 100, Color.BLUE);
+	Paddle_old paddle2 = new Paddle_old(570, 125, 20, 100, Color.ORANGE);
+	Paddle_old paddle3 = new Paddle_old(250, 10, 100, 20, Color.YELLOW);
+	Paddle_old paddle4 = new Paddle_old(250, 320, 100, 20, Color.VIOLET);
 	
 	final StringProperty resultLeft = new SimpleStringProperty("0");
 	final StringProperty resultRight = new SimpleStringProperty("0");
 	final StringProperty winMsg = new SimpleStringProperty("");
 	
 
-	public Controller(int playerNumber, int ballCount) {
+	public Controller_old(int playerNumber, int ballCount) {
 		
 		this.player1 = paddle1;
 		this.player2 = paddle2;
@@ -108,7 +108,7 @@ public class Controller extends Stage {
 		final KeyFrame moveBallsFrame = new KeyFrame(new Duration(16), new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				for (Ball ball : ballList) {
+				for (Ball_old ball : ballList) {
 					ball.move();
 				}
 				
@@ -168,14 +168,14 @@ public class Controller extends Stage {
 	
 	
 	public void addBall() {
-		Ball newBall = new Ball(); 
+		Ball_old newBall = new Ball_old(); 
 		ballList.add(newBall);
 		root.getChildren().add(newBall);
 	}
 	
 	public void checkScore(){
 		if(!pl3 && !pl4){
-		for (Ball ball : ballList){
+		for (Ball_old ball : ballList){
 			if(ball.getCenterX()>=630){
 				ballList.remove(ball);
 				resultLeft.set("" + (Integer.parseInt(resultLeft.get()) + 1));
@@ -193,7 +193,7 @@ public class Controller extends Stage {
 	}
 			
 	private void checkCollision() {
-		for (Ball ball : ballList) {
+		for (Ball_old ball : ballList) {
 			if (pl1 && ball.getLayoutBounds().intersects(player1.getLayoutBounds())) {
 				ball.collisionHorizontal();
 				ball.move();

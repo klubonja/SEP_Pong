@@ -6,7 +6,7 @@ import java.util.Random;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-public class Ball extends Circle {
+public class Ball_old extends Circle {
 		
 		public final static int BALL_INCR=5;
 		public final static double RADIUS = 20;
@@ -18,11 +18,11 @@ public class Ball extends Circle {
 		
 		
 		//Constructor called in Controller which directs to the real constructor
-		public Ball() {
+		public Ball_old() {
 			this(BALL_INCR, 0, Color.RED);
 		}
 		
-		public Ball(double xSpeed, double ySpeed, Color color) {
+		public Ball_old(double xSpeed, double ySpeed, Color color) {
 			super();
 			setRadius(RADIUS);
 			setFill(color);

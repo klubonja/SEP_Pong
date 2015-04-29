@@ -4,12 +4,12 @@ package Model;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class Paddle extends Rectangle {
+public class Paddle_old extends Rectangle {
 	
 	public final int PADDLE_MOVEMENT = 15;
 	
 
-	public Paddle(double x, double y, double width, double height, Color color){
+	public Paddle_old(double x, double y, double width, double height, Color color){
 		super(width,height,color);
 		setX(x);
 		setY(y);

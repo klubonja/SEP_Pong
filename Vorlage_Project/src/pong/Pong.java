@@ -18,7 +18,7 @@ public class Pong extends Application {
 	
 	Stage primaryStage;
 	GridPane root;
-	Controller selectedGameStart; 
+	Controller_old selectedGameStart; 
     SimpleStringProperty footerError = new SimpleStringProperty();
 	
 	public static void main(String[] args) {
@@ -71,7 +71,7 @@ public class Pong extends Application {
 					int numberOfBalls = Integer.parseInt(ballNumber.getText());
 					if(numberOfPlayers<=4 && numberOfPlayers>0 && numberOfBalls>0){
 					System.out.println("Playing with " + numberOfPlayers + " players and " + numberOfBalls + " balls.");
-					selectedGameStart = new Controller(numberOfPlayers, numberOfBalls);
+					selectedGameStart = new Controller_old(numberOfPlayers, numberOfBalls);
 					primaryStage.close();}
 					else footerError.set("Invalid number of players.");
 				}
