@@ -2,6 +2,7 @@ package vereinigung;
 
 import vereinigung.Controller;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -9,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
@@ -21,7 +21,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class Main extends Application {
 	final Image gestreifteRemulanerHintergrund1 = new Image(
@@ -101,7 +100,12 @@ public class Main extends Application {
 		quitGame.setEffect(dropShadow);
 		quitGame.setStyle("-fx-font-size: 30");
 		quitGame.setMinSize(150, 150);
-		// fehler meldung
+		quitGame.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent e) {
+				Platform.exit();
+			}
+		});
+		// fehlermeldung
 		Label error = new Label("");
 		error.textProperty().bind(footerError);
 
@@ -140,11 +144,6 @@ public class Main extends Application {
 				}
 			}
 		});
-
-		/*
-		 * root.getChildren().add(background2); root.getChildren().add(player1);
-		 * root.getChildren().add(player2);
-		 */
 		gp.getChildren().addAll(background1, title, author, selectPlayer,
 				playerNumber, selectBalls, ballNumber, startGame, quitGame,
 				error);
