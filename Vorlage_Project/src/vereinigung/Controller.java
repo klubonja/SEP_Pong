@@ -175,6 +175,7 @@ public class Controller extends Stage {
 			if (Integer.parseInt(resultRight.get()) >= 21) {
 				winMsg.set("Player 1 wins");
 			}
+			System.out.println(ballList.size());
 		}
 	}
 
@@ -187,7 +188,7 @@ public class Controller extends Stage {
 						+ ball.getXSpeed());
 				ball.ballImageView.setY(ball.ballImageView.getY()
 						+ ball.getYSpeed());
-				if (collision()) {
+				if (collision(ball)) {
 					ball.t.stop();
 					ball.setXSpeed(ball.getXSpeed() * -1);
 					ballBounceOffPlayer(player1);
@@ -207,22 +208,20 @@ public class Controller extends Stage {
 	}
 
 	// checks for collision
-	public boolean collision() {
-		for (Ball ball : ballList) {
+	public boolean collision(Ball ball) {
 			if (ball.ballImageView.intersects(player2.player
 					.getBoundsInParent())
 					|| ball.ballImageView.intersects(player1.player
 							.getBoundsInParent())) {
 				return true;
 			}
-		}
 		return false;
 	}
 
 	// redirects the ball depending on the part of the paddle that got hit
 	public void ballBounceOffPlayer(Paddle player) {
 		for (Ball ball : ballList) {
-			if (collision()) {
+			if (collision(ball)) {
 
 				if (ball.ballImageView.getY() >= player.player.getY()
 						&& ball.ballImageView.getY() < player.player.getY() + 98) {
