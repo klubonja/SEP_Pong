@@ -21,6 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Main extends Application {
 	final Image gestreifteRemulanerHintergrund1 = new Image(
@@ -107,6 +108,7 @@ public class Main extends Application {
 		});
 		// fehlermeldung
 		Label error = new Label("");
+		error.setStyle("-fx-font-size: 30");
 		error.textProperty().bind(footerError);
 
 		GridPane.setConstraints(title, 2, 0);
@@ -130,6 +132,7 @@ public class Main extends Application {
 				} else if (playerNumber1.isSelected()
 						&& playerNumber2.isSelected()) {
 					footerError.set("Please select only one option.");
+					System.out.println("Error too many players");
 				} else if (!playerNumber1.isSelected()
 						&& !playerNumber2.isSelected()) {
 					footerError.set("Please select only one option.");
@@ -141,6 +144,9 @@ public class Main extends Application {
 				if (numberOfBalls > 0) {
 					selectedGameStart = new Controller(players, numberOfBalls);
 					stage.close();
+				} else {
+					footerError.setValue("Please select number of balls!");
+					root.getChildren().add(error);
 				}
 			}
 		});
@@ -150,7 +156,7 @@ public class Main extends Application {
 		root.getChildren().addAll(background1, gp);
 		stage.setTitle("Pong");
 		stage.setScene(scene);
-		// stage.initStyle(StageStyle.UNDECORATED);
+		stage.initStyle(StageStyle.UNDECORATED);
 		stage.show();
 	}
 

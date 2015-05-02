@@ -3,12 +3,12 @@ package vereinigung;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class Paddle extends ImageView {
+public class Paddle extends ImageView{
 	ImageView player = new ImageView();
 	ImageView fireUp = new ImageView();
 	ImageView fireDown = new ImageView();
 	public final int PADDLE_SPEED = 10;
-
+	
 	public Paddle(int x, int y, Image img, int fireUpX, int fireUpY,
 			Image fireUp, int fireDownX, int fireDownY, Image fireDown) {
 		player.setImage(img);
@@ -22,8 +22,9 @@ public class Paddle extends ImageView {
 		this.fireDown.setOpacity(0);
 		this.fireDown.setX(fireDownX);
 		this.fireDown.setY(fireDownY);
+		
 	}
-
+	
 	public void moveUp() {
 		fireDown.setOpacity(100);
 		player.setY(player.getY() - PADDLE_SPEED);

@@ -39,27 +39,27 @@ public class Controller extends Stage {
 	final StringProperty resultRight = new SimpleStringProperty("0");
 	final StringProperty winMsg = new SimpleStringProperty("");
 
+	private Label resultL;
+	private Label resultR;
+	private Label win;
+
 	private Paddle player2;
 	private Paddle player1;
 	private List<Ball> ballList = new LinkedList<Ball>();
-	Timeline t;
 	private Group root = new Group();
+	private boolean allowPlayer2 = false;
 
 	public Controller(boolean players, int balls) {
 		player2 = new Paddle(10, 304, p1, 10, 247, fireUp, 10, 502, fireDown);
 		player1 = new Paddle(940, 304, p2, 940, 247, fireUp, 940, 502, fireDown);
 		ImageView background2 = new ImageView();
 		background2.setImage(gestreifteRemulanerHintergrund2);
-		if (players) {
-			root.getChildren().addAll(background2, player2, player2.fireUp,
-					player2.fireDown);
-		} else {
-			root.getChildren().addAll(background2, player2.player,
-					player2.fireUp, player2.fireDown, player1.player,
-					player1.fireUp, player1.fireDown);
+		if (!players) {
+			allowPlayer2 = true;
 		}
-
 		Scene pongBoard = new Scene(root, 1000, 770);
+
+		// behandelt die ereignisse, die durch den knopfdruck ausgeloest werden
 		pongBoard.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@SuppressWarnings("incomplete-switch")
 			@Override
@@ -73,10 +73,14 @@ public class Controller extends Stage {
 					player1.moveDown();
 					break;
 				case W:
-					player2.moveUp();
+					if (allowPlayer2) {
+						player2.moveUp();
+					}
 					break;
 				case S:
-					player2.moveDown();
+					if (allowPlayer2) {
+						player2.moveDown();
+					}
 					break;
 				case B:
 					addBall();
@@ -89,11 +93,11 @@ public class Controller extends Stage {
 			}
 		});
 
+		// behandelt die ereignisse, die nach dem knopfdruck ausgeloest werden
 		pongBoard.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			@SuppressWarnings("incomplete-switch")
 			@Override
 			public void handle(KeyEvent e) {
-				
 				KeyCode code = e.getCode();
 				switch (code) {
 				case UP:
@@ -113,24 +117,26 @@ public class Controller extends Stage {
 		});
 
 		if (true) {
-			Label resultL = new Label("0");
+			resultL = new Label("0");
 			resultL.setTranslateX(450);
 			resultL.setTranslateY(685);
 			resultL.setTextFill(Color.WHITE);
 			resultL.setFont(Font.font("Consolas", FontWeight.BOLD, 50));
 			resultL.textProperty().bind(resultLeft);
-			Label resultR = new Label("0");
+			resultR = new Label("0");
 			resultR.setTranslateX(550);
 			resultR.setTranslateY(685);
 			resultR.setTextFill(Color.WHITE);
 			resultR.setFont(Font.font("Consolas", FontWeight.BOLD, 50));
 			resultR.textProperty().bind(resultRight);
-			Label win = new Label("Player 1 Wins");
+			win = new Label("Player 1 Wins");
 			win.setTranslateX(195);
 			win.setTranslateY(160);
 			win.setFont(Font.font("Consolas", 30));
 			win.textProperty().bind(winMsg);
-			root.getChildren().addAll(resultL, resultR, win);
+			root.getChildren().addAll(background2, player2.player,
+					player2.fireUp, player2.fireDown, player1.player,
+					player1.fireUp, player1.fireDown, resultL, resultR, win);
 		}
 		root.setFocusTraversable(true);
 
@@ -138,7 +144,6 @@ public class Controller extends Stage {
 			addBall();
 		}
 		bounce();
-		checkScore();
 
 		this.setScene(pongBoard);
 		this.setResizable(false);
@@ -154,53 +159,54 @@ public class Controller extends Stage {
 	}
 
 	public void checkScore() {
-		KeyFrame kfr = new KeyFrame(new Duration(100), event -> {
-			for (Ball ball : ballList) {
-				if (ball.getX() + 10 >= 1000) {
-					ballList.remove(ball);
-					resultLeft.set("" + (Integer.parseInt(resultLeft.get()) + 1));
-				}
-				if (ball.getX() + 10 <= -30) {
-					ballList.remove(ball);
-					resultRight.set("" + (Integer.parseInt(resultRight.get()) + 1));
-				}
-
-				if (Integer.parseInt(resultLeft.get()) >= 21) {
-					winMsg.set("Player 1 wins");
-				}
+		for (Ball ball : ballList) {
+			if (ball.ballImageView.getX() >= 1000) {
+				ballList.remove(ball);
+				resultLeft.set("" + (Integer.parseInt(resultLeft.get()) + 1));
 			}
-		});
-		Timeline timer = new Timeline(kfr);
-		timer.setCycleCount(Timeline.INDEFINITE);
-		timer.play();
+			if (ball.ballImageView.getX() <= -30) {
+				ballList.remove(ball);
+				resultRight.set("" + (Integer.parseInt(resultRight.get()) + 1));
+			}
+
+			if (Integer.parseInt(resultLeft.get()) >= 21) {
+				winMsg.set("Player 2 wins");
+			}
+			if (Integer.parseInt(resultRight.get()) >= 21) {
+				winMsg.set("Player 1 wins");
+			}
+		}
 	}
 
 	// lets ball move and bounce off the top and bottom
 	public void bounce() {
 		for (Ball ball : ballList) {
-			KeyFrame keyFrame = new KeyFrame(new Duration(10),
-					event -> {
-						ball.ballImageView.setX(ball.ballImageView.getX()
-								+ ball.xSpeed);
-						ball.ballImageView.setY(ball.ballImageView.getY()
-								+ ball.ySpeed);
-						if (collision()) {
-							ball.t.stop();
-							ball.xSpeed *= -1;
-							bounce();
-						} else if (ball.ballImageView.getY() > 750
-								|| ball.ballImageView.getY() < 20) {
-							ball.t.stop();
-							ball.ySpeed *= -1;
-							bounce();
-						}
-					});
+			checkScore();
+			KeyFrame keyFrame = new KeyFrame(new Duration(10), event -> {
+				ball.ballImageView.setX(ball.ballImageView.getX()
+						+ ball.getXSpeed());
+				ball.ballImageView.setY(ball.ballImageView.getY()
+						+ ball.getYSpeed());
+				if (collision()) {
+					ball.t.stop();
+					ball.setXSpeed(ball.getXSpeed() * -1);
+					ballBounceOffPlayer(player1);
+					ballBounceOffPlayer(player2);
+					bounce();
+				} else if (ball.ballImageView.getY() > 750
+						|| ball.ballImageView.getY() < 20) {
+					ball.t.stop();
+					ball.setYSpeed(ball.getYSpeed() * -1);
+					bounce();
+				}
+			});
 			ball.t = new Timeline(keyFrame);
 			ball.t.setCycleCount(Timeline.INDEFINITE);
 			ball.t.play();
 		}
 	}
 
+	// checks for collision
 	public boolean collision() {
 		for (Ball ball : ballList) {
 			if (ball.ballImageView.intersects(player2.player
@@ -211,5 +217,26 @@ public class Controller extends Stage {
 			}
 		}
 		return false;
+	}
+
+	// redirects the ball depending on the part of the paddle that got hit
+	public void ballBounceOffPlayer(Paddle player) {
+		for (Ball ball : ballList) {
+			if (collision()) {
+
+				if (ball.ballImageView.getY() >= player.player.getY()
+						&& ball.ballImageView.getY() < player.player.getY() + 98) {
+					if (ball.getYSpeed() > 0) {
+						ball.setYSpeed(ball.getYSpeed() * -1);
+					}
+				}
+				if (ball.ballImageView.getY() > player.player.getY() + 98
+						&& ball.ballImageView.getY() < player.player.getY() + 196) {
+					if (ball.getYSpeed() < 0) {
+						ball.setYSpeed(ball.getYSpeed() * -1);
+					}
+				}
+			}
+		}
 	}
 }
