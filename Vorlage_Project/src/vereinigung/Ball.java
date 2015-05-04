@@ -5,7 +5,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Ball extends ImageView {
-	Timeline t;
 	ImageView ballImageView = new ImageView();
 
 	// Vector x and y of the ball's speed

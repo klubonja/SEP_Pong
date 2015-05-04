@@ -24,10 +24,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class Main extends Application {
-	final Image gestreifteRemulanerHintergrund1 = new Image(
-			Main.class.getResourceAsStream("Hintergrund1.png"));
+	final Image gestreifteRemulanerHintergrund1 = new Image("/Hintergrund1.png");
 
-	SimpleStringProperty footerError = new SimpleStringProperty();
+	SimpleStringProperty footerError = new SimpleStringProperty("");
 	boolean players;
 
 	Controller selectedGameStart;
@@ -108,7 +107,7 @@ public class Main extends Application {
 		});
 		// fehlermeldung
 		Label error = new Label("");
-		error.setStyle("-fx-font-size: 30");
+		error.setStyle("-fx-font-size: 500");
 		error.textProperty().bind(footerError);
 
 		GridPane.setConstraints(title, 2, 0);
@@ -140,11 +139,17 @@ public class Main extends Application {
 						&& playerNumber2.isSelected()) {
 					players = false;
 				}
-				int numberOfBalls = Integer.parseInt(ballNumber.getText());
-				if (numberOfBalls > 0) {
-					selectedGameStart = new Controller(players, numberOfBalls);
-					stage.close();
-				} else {
+
+				int numberOfBalls;
+				try {
+					numberOfBalls = Integer.parseInt(ballNumber.getText());
+					if (numberOfBalls > 0) {
+						selectedGameStart = new Controller(players,
+								numberOfBalls);
+						stage.close();
+					}
+				} catch (IllegalArgumentException e1) {
+					e1.printStackTrace();
 					footerError.setValue("Please select number of balls!");
 					root.getChildren().add(error);
 				}
