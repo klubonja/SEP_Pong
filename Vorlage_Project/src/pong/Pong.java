@@ -1,6 +1,10 @@
 package pong;
 	
+import java.io.IOException;
+import org.json.*;
+
 import javafx.application.Application;
+import server.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -23,6 +27,7 @@ public class Pong extends Application {
 	
 	public static void main(String[] args) {
 		launch(args);
+	
 	} 
 
 	@Override
@@ -67,6 +72,15 @@ public class Pong extends Application {
 			startGame.setOnMouseClicked(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent e)  {
+					
+					JSONServer server = new JSONServer();
+					try {
+			            server.start(7777);
+			            System.out.println("Server Initialised");
+
+			        } catch (IOException err) {
+			            err.printStackTrace();
+			        }
 					int numberOfPlayers = Integer.parseInt(playerNumber.getText());
 					int numberOfBalls = Integer.parseInt(ballNumber.getText());
 					if(numberOfPlayers<=4 && numberOfPlayers>0 && numberOfBalls>0){

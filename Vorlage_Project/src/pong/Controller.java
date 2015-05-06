@@ -1,7 +1,13 @@
 package pong;
 
 import Model.*;
+import server.*;
 
+import org.json.*;
+
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.NoRouteToHostException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -52,6 +58,8 @@ public class Controller extends Stage {
 	
 
 	public Controller(int playerNumber, int ballCount) {
+		
+		
 		
 		root.getChildren().add(field);
 		
@@ -127,6 +135,25 @@ public class Controller extends Stage {
 		bmove.getKeyFrames().add(moveBallsFrame);
 		bmove.play();
 		
+		JSONClient client = new JSONClient();
+		try{
+
+            client.connect("localhost", 7777);
+            // For JSON call sendJSON(JSON json) & receiveJSON();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("Player ", "Lars");
+            client.sendJSON(jsonObject);
+            client.receiveJSON();
+        }catch(IOException e){
+        	System.out.println("Error at initialisation");
+        }finally {
+            try {
+                client.getSocket().close();
+            } catch (IOException e) {
+               System.out.println("Error at closing socket");
+            }
+        } 
+		
 		
 		
 		Scene pongBoard = new Scene(root, 600, 350);
@@ -141,8 +168,17 @@ public class Controller extends Stage {
 				switch(keyCode){
 				
 				case UP:
-					player1.moveUp(); break;
-				case DOWN:
+					player1.moveUp();
+				    try{
+			            JSONObject jsonObject = new JSONObject();
+			            jsonObject.put("Player ", "Lars");
+			            client.sendJSON(jsonObject);
+			            client.receiveJSON();
+				    }catch(IOException e){
+				    	System.out.println("Error at this point");
+				    }
+				    break;
+			    case DOWN:
 					player1.moveDown(); break;
 		 		case W:
 					player2.moveUp(); break;
