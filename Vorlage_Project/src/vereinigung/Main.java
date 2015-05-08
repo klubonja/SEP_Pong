@@ -48,7 +48,7 @@ public class Main extends Application {
 		gp.getRowConstraints().add(new RowConstraints(50));
 		gp.setMinHeight(600);
 		gp.setMinWidth(1000);
-		gp.setStyle("-fx-background-color: radial-gradient( radius 100%, lightgreen, lightseagreen)");
+		gp.setStyle("-fx-background-color: radial-gradient(radius 100%, lightgreen, lightseagreen)");
 
 		DropShadow dropShadow = new DropShadow();
 		dropShadow.setRadius(1.0);
