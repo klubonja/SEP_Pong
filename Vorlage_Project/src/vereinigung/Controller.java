@@ -59,6 +59,155 @@ public class Controller extends Stage {
 	private boolean player2Mouse = false;
 	Timeline t;
 
+	// constructor for network game
+	public Controller() {
+		player2 = new Paddle(10, 304, p1, 10, 247, fireUp, 10, 502, fireDown);
+		player1 = new Paddle(940, 304, p2, 940, 247, fireUp, 940, 502, fireDown);
+		ImageView background2 = new ImageView();
+		background2.setImage(gestreifteRemulanerHintergrund2);
+		Scene pongBoard = new Scene(root, 1000, 770);
+
+		pongBoard.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent e) {
+				if (e.getButton() == MouseButton.SECONDARY) {
+					player1Mouse = true;
+				}
+				if (e.getButton() == MouseButton.PRIMARY) {
+					player2Mouse = true;
+				}
+			}
+		});
+
+		pongBoard.setOnMouseMoved(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent e) {
+				if (player1Mouse) {
+					PointerInfo a = MouseInfo.getPointerInfo();
+					Point b = a.getLocation();
+					SimpleDoubleProperty y = new SimpleDoubleProperty();
+					y.set((int) b.getY() - 80);
+					player1.player.yProperty().bind(y);
+					player1.fireUp.yProperty().bind(y);
+					player1.fireDown.yProperty().bind(y);
+					if (y.get() > 574) {
+						y.set(574);
+					}
+				}
+				if (player2Mouse) {
+					PointerInfo a = MouseInfo.getPointerInfo();
+					Point b = a.getLocation();
+					SimpleDoubleProperty y = new SimpleDoubleProperty();
+					y.set((int) b.getY() - 80);
+					player2.player.yProperty().bind(y);
+					player1.fireUp.yProperty().bind(y);
+					player1.fireDown.yProperty().bind(y);
+					if (y.get() > 574) {
+						y.set(574);
+					}
+				}
+			}
+		});
+		// behandelt die ereignisse, die durch den knopfdruck ausgeloest werden
+		pongBoard.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@SuppressWarnings("incomplete-switch")
+			@Override
+			public void handle(KeyEvent evt) {
+				KeyCode keyCode = evt.getCode();
+				switch (keyCode) {
+				case UP:
+					if (!player1Mouse) {
+						player1.moveUp();
+					}
+					break;
+				case DOWN:
+					if (!player1Mouse) {
+						player1.moveDown();
+					}
+					break;
+				case W:
+					if (allowPlayer2 || !player2Mouse) {
+						player2.moveUp();
+					}
+					break;
+				case S:
+					if (allowPlayer2 || !player2Mouse) {
+						player2.moveDown();
+					}
+					break;
+				case B:
+					addBall();
+					bounce();
+					break;
+				case Q:
+					Platform.exit();
+					break;
+				}
+			}
+		});
+
+		// behandelt die ereignisse, die nach dem knopfdruck ausgeloest werden
+		pongBoard.setOnKeyReleased(new EventHandler<KeyEvent>() {
+			@SuppressWarnings("incomplete-switch")
+			@Override
+			public void handle(KeyEvent e) {
+				KeyCode code = e.getCode();
+				switch (code) {
+				case UP:
+					player1.fadeFire(player1.fireDown);
+					break;
+				case DOWN:
+					player1.fadeFire(player1.fireUp);
+					break;
+				case W:
+					player2.fadeFire(player2.fireDown);
+					break;
+				case S:
+					player2.fadeFire(player2.fireUp);
+					break;
+				}
+			}
+		});
+
+		if (true) {
+			resultL = new Label("0");
+			resultL.setTranslateX(450);
+			resultL.setTranslateY(685);
+			resultL.setTextFill(Color.WHITE);
+			resultL.setFont(Font.font("Consolas", FontWeight.BOLD, 50));
+			resultL.textProperty().bind(resultLeft);
+			resultR = new Label("0");
+			resultR.setTranslateX(550);
+			resultR.setTranslateY(685);
+			resultR.setTextFill(Color.WHITE);
+			resultR.setFont(Font.font("Consolas", FontWeight.BOLD, 50));
+			resultR.textProperty().bind(resultRight);
+			win = new Label("");
+			win.setTranslateX(150);
+			win.setTranslateY(305);
+			win.setFont(Font.font("Consolas", 80));
+			win.setTextFill(Color.WHITE);
+			win.textProperty().bind(winMsg);
+			root.getChildren().addAll(background2, player2.player,
+					player2.fireUp, player2.fireDown, player1.player,
+					player1.fireUp, player1.fireDown, resultL, resultR, win);
+		}
+		root.setFocusTraversable(true);
+
+		addBall();
+
+		KeyFrame keyFrame = new KeyFrame(new Duration(10), event -> bounce());
+		t = new Timeline(keyFrame);
+		t.setCycleCount(Timeline.INDEFINITE);
+		t.play();
+
+		pongBoard.setCursor(Cursor.NONE);
+		this.setScene(pongBoard);
+		this.setResizable(false);
+		this.initStyle(StageStyle.UNDECORATED);
+		this.show();
+		this.root.requestFocus();
+
+	}
+
 	// constructor
 	public Controller(boolean players, int balls) {
 		player2 = new Paddle(10, 304, p1, 10, 247, fireUp, 10, 502, fireDown);
