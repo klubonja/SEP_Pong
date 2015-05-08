@@ -17,6 +17,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -169,13 +170,13 @@ public class Controller extends Stage {
 
 		if (true) {
 			resultL = new Label("0");
-			resultL.setTranslateX(450);
+			resultL.setTranslateX(430);
 			resultL.setTranslateY(685);
 			resultL.setTextFill(Color.WHITE);
 			resultL.setFont(Font.font("Consolas", FontWeight.BOLD, 50));
 			resultL.textProperty().bind(resultLeft);
 			resultR = new Label("0");
-			resultR.setTranslateX(550);
+			resultR.setTranslateX(530);
 			resultR.setTranslateY(685);
 			resultR.setTextFill(Color.WHITE);
 			resultR.setFont(Font.font("Consolas", FontWeight.BOLD, 50));
@@ -383,11 +384,29 @@ public class Controller extends Stage {
 
 			if (Integer.parseInt(resultLeft.get()) >= 21) {
 				winMsg.set("Red player wins!");
+				newGameButton();
 			}
 			if (Integer.parseInt(resultRight.get()) >= 21) {
 				winMsg.set("Green player wins!");
+				newGameButton();
 			}
 		}
+	}
+	
+	public void newGameButton(){
+		Button newGame = new Button("Restart Game");
+		newGame.setTranslateX(395);
+		newGame.setTranslateY(410);
+		newGame.setMinSize(150,100);
+		newGame.setStyle("-fx-font-size: 30 ;"
+				+ "-fx-background-color: radial-gradient(radius 100%, aliceblue, lightsteelblue);"
+				+ "-fx-background-radius: 20");
+		newGame.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent m){
+				
+			}
+		});
+		root.getChildren().add(newGame);
 	}
 
 	// lets ball move and bounce off the top and bottom

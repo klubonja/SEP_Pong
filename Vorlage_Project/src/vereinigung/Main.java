@@ -108,7 +108,9 @@ public class Main extends Application {
 		
 		startGame.setMinSize(150, 150);
 		startGame.setTextFill(Color.WHITE);
-		startGame.setStyle("-fx-font-size: 30 ; -fx-background-color: radial-gradient(radius 100%, lightskyblue, cornflowerblue)");
+		startGame.setStyle("-fx-font-size: 30 ;"
+				+ "-fx-background-color: radial-gradient(radius 100%, lightskyblue, cornflowerblue);"
+				+ "-fx-background-radius: 20");
 		startGame.addEventHandler(MouseEvent.MOUSE_ENTERED, 
 			    new EventHandler<MouseEvent>() {
 			        @Override public void handle(MouseEvent e) {
@@ -126,7 +128,8 @@ public class Main extends Application {
 		// button quit
 		Button quitGame = new Button("Quit");
 		quitGame.setTextFill(Color.WHITE);
-		quitGame.setStyle("-fx-font-size: 30 ; -fx-background-color: radial-gradient(radius 100%, coral, crimson)");
+		quitGame.setStyle("-fx-font-size: 30 ; -fx-background-color: radial-gradient(radius 100%, coral, crimson);"
+				+ "-fx-background-radius: 20");
 		quitGame.setMinSize(150, 150);
 		quitGame.addEventHandler(MouseEvent.MOUSE_ENTERED, 
 			    new EventHandler<MouseEvent>() {
