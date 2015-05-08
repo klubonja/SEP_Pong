@@ -53,32 +53,41 @@ public class Main extends Application {
 		DropShadow dropShadow = new DropShadow();
 		dropShadow.setRadius(1.0);
 		dropShadow.setBlurType(BlurType.GAUSSIAN);
-
+		
+		DropShadow buttonShadow = new DropShadow();
+		buttonShadow.setRadius(13);
+	
 		// ueberschrift
 		Label title = new Label("Ping-Pong");
 		title.setEffect(new Glow(0.7));
 		title.setStyle("-fx-font-size: 80");
+		
 		// untertitel
 		Label author = new Label("Gestreifte Remulaner 2015");
 		author.setEffect(new Glow(0.5));
 		author.setStyle("-fx-font-size: 38");
 		// label fuer die auswahl von spielern
+		
 		Label selectPlayer = new Label("Select number of PLAYERS");
 		selectPlayer.setEffect(dropShadow);
 		selectPlayer.setStyle("-fx-font-size: 23");
 		// label fuer die auswahl von baellen
+		
 		Label selectBalls = new Label("Select number of BALLS");
 		selectBalls.setEffect(dropShadow);
 		selectBalls.setStyle("-fx-font-size: 23");
+		
 		// hbox fuer die radio buttons fuer die anzahl der spieler
 		HBox playerNumber = new HBox(50);
 		ToggleGroup group = new ToggleGroup();
+		
 		// erster radio button
 		RadioButton playerNumber1 = new RadioButton();
 		playerNumber1.setText("1 Player");
 		playerNumber1.setStyle("-fx-font-size: 30");
 		playerNumber1.setEffect(dropShadow);
 		playerNumber1.setToggleGroup(group);
+		
 		// zweiter radio button
 		RadioButton playerNumber2 = new RadioButton();
 		playerNumber2.setText("2 Players");
@@ -86,27 +95,52 @@ public class Main extends Application {
 		playerNumber2.setEffect(dropShadow);
 		playerNumber2.setToggleGroup(group);
 		playerNumber.getChildren().addAll(playerNumber1, playerNumber2);
-		if (playerNumber1.isSelected()) {
-			playerNumber2.setSelected(false);
-		}
-		if (playerNumber2.isSelected()) {
-			playerNumber1.setSelected(false);
-		}
+
 		// text feld zur eingabe der anzahl an baelle
 		TextField ballNumber = new TextField();
-		ballNumber.setEffect(dropShadow);
+		ballNumber.setEffect(buttonShadow);
 		ballNumber.setPromptText("e.g. 5");
 		ballNumber.setPrefWidth(50);
+		
 		// button play
 		Button startGame = new Button("Play");
 		startGame.setEffect(dropShadow);
-		startGame.setStyle("-fx-font-size: 30");
+		
 		startGame.setMinSize(150, 150);
+		startGame.setTextFill(Color.WHITE);
+		startGame.setStyle("-fx-font-size: 30 ; -fx-background-color: radial-gradient(radius 100%, lightskyblue, cornflowerblue)");
+		startGame.addEventHandler(MouseEvent.MOUSE_ENTERED, 
+			    new EventHandler<MouseEvent>() {
+			        @Override public void handle(MouseEvent e) {
+			            startGame.setEffect(buttonShadow);
+			        }
+			});
+			//Removing the shadow when the mouse cursor is off
+			startGame.addEventHandler(MouseEvent.MOUSE_EXITED, 
+			    new EventHandler<MouseEvent>() {
+			        @Override public void handle(MouseEvent e) {
+			            startGame.setEffect(null);
+			        }
+			});
+		
 		// button quit
 		Button quitGame = new Button("Quit");
-		quitGame.setEffect(dropShadow);
-		quitGame.setStyle("-fx-font-size: 30");
+		quitGame.setTextFill(Color.WHITE);
+		quitGame.setStyle("-fx-font-size: 30 ; -fx-background-color: radial-gradient(radius 100%, coral, crimson)");
 		quitGame.setMinSize(150, 150);
+		quitGame.addEventHandler(MouseEvent.MOUSE_ENTERED, 
+			    new EventHandler<MouseEvent>() {
+			        @Override public void handle(MouseEvent e) {
+			            quitGame.setEffect(buttonShadow);
+			        }
+			});
+			//Removing the shadow when the mouse cursor is off
+			quitGame.addEventHandler(MouseEvent.MOUSE_EXITED, 
+			    new EventHandler<MouseEvent>() {
+			        @Override public void handle(MouseEvent e) {
+			            quitGame.setEffect(null);
+			        }
+			});
 		quitGame.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
 				Platform.exit();
