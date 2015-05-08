@@ -8,6 +8,7 @@ import org.json.*;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.NoRouteToHostException;
+import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -136,7 +137,7 @@ public class Controller extends Stage {
 		bmove.play();
 		
 		JSONClient client = new JSONClient();
-		try{
+        try{
 
             client.connect("localhost", 7777);
             // For JSON call sendJSON(JSON json) & receiveJSON();
@@ -144,15 +145,14 @@ public class Controller extends Stage {
             jsonObject.put("Player ", "Lars");
             client.sendJSON(jsonObject);
             client.receiveJSON();
-        }catch(IOException e){
-        	System.out.println("Error at initialisation");
-        }finally {
-            try {
-                client.getSocket().close();
-            } catch (IOException e) {
-               System.out.println("Error at closing socket");
-            }
-        } 
+        }
+
+        catch(IOException e){
+            System.err.println(e.getMessage());
+            System.err.println(e);
+        }
+        
+
 		
 		
 		
@@ -169,14 +169,14 @@ public class Controller extends Stage {
 				
 				case UP:
 					player1.moveUp();
-				    try{
-			            JSONObject jsonObject = new JSONObject();
-			            jsonObject.put("Player ", "Lars");
-			            client.sendJSON(jsonObject);
-			            client.receiveJSON();
-				    }catch(IOException e){
-				    	System.out.println("Error at this point");
-				    }
+					try{
+					JSONObject jsonObject = new JSONObject();
+		            jsonObject.put("Player ", "Kristi");
+		            client.sendJSON(jsonObject);
+		            client.receiveJSON();
+					}catch(IOException e){
+						e.printStackTrace();
+					}
 				    break;
 			    case DOWN:
 					player1.moveDown(); break;

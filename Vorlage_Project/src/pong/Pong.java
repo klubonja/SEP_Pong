@@ -1,10 +1,8 @@
 package pong;
 	
-import java.io.IOException;
-import org.json.*;
+
 
 import javafx.application.Application;
-import server.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -73,14 +71,6 @@ public class Pong extends Application {
 				@Override
 				public void handle(MouseEvent e)  {
 					
-					JSONServer server = new JSONServer();
-					try {
-			            server.start(7777);
-			            System.out.println("Server Initialised");
-
-			        } catch (IOException err) {
-			            err.printStackTrace();
-			        }
 					int numberOfPlayers = Integer.parseInt(playerNumber.getText());
 					int numberOfBalls = Integer.parseInt(ballNumber.getText());
 					if(numberOfPlayers<=4 && numberOfPlayers>0 && numberOfBalls>0){
@@ -88,6 +78,7 @@ public class Pong extends Application {
 					selectedGameStart = new Controller(numberOfPlayers, numberOfBalls);
 					primaryStage.close();}
 					else footerError.set("Invalid number of players.");
+					
 				}
 			});
 			

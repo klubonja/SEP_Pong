@@ -25,11 +25,13 @@ public class JSONServer {
 
 
     public void accept() throws IOException {
+
         while (true) {
             Socket socket = serverSocket.accept();
             Runnable r = new MyThreadHandler(socket);
             Thread t = new Thread(r);
             t.start();
+            System.out.println("Server is accepting");
         }
     }
 
@@ -97,7 +99,7 @@ public class JSONServer {
     }
 
     public static void main(String[] args) {
-       /* JSONServer server = new JSONServer();
+        JSONServer server = new JSONServer();
 
         try {
             server.start(7777);
@@ -105,6 +107,6 @@ public class JSONServer {
         } catch (IOException e) {
             System.err.println(e.getMessage());
             System.err.println(e);
-        }*/
+        }
     }
 }

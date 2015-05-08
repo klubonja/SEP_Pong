@@ -62,7 +62,7 @@ public class JSONClient {
 
 
     public static void main(String[] args) {
-       /* JSONClient client = new JSONClient();
+        JSONClient client = new JSONClient();
         try{
 
             client.connect("localhost", 7777);
@@ -105,7 +105,7 @@ public class JSONClient {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } */
+        } 
 
     }
 
