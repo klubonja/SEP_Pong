@@ -180,7 +180,7 @@ public class Main extends Application {
 		});
 		
 		stage.setResizable(false);
-		stage.setTitle("Pong SEP2015");
+		stage.setTitle("Pong");
 		stage.setScene(scene);
 		//stage.initStyle(StageStyle.UNDECORATED);
 		stage.show();
