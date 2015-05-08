@@ -45,8 +45,8 @@ public class Pong extends Application {
 		    title.setStyle("-fx-font-size: 36");
 		    Label author = new Label("GestreifteRemulaner 2015");
 		    author.setStyle("-fx-font-size: 20");
-		    Label selectPlayer = new Label("Select number of PLAYERS");
-		    Label selectBalls = new Label("Select number of BALLS");
+		    Label selectPlayer = new Label("Select number of PLAYERS!");
+		    Label selectBalls = new Label("Select number of BALLS!");
 		    TextField playerNumber = new TextField();
 		    playerNumber.setPrefWidth(30);
 		    TextField ballNumber = new TextField();
