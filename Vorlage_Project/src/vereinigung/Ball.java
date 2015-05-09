@@ -1,35 +1,58 @@
 package vereinigung;
 
-import javafx.animation.Timeline;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
-public class Ball extends ImageView {
-	ImageView ballImageView = new ImageView();
+
+public class Ball extends Circle {
+	
 
 	// Vector x and y of the ball's speed
-	private int xSpeed = 3;
-	private int ySpeed = 1;
+	private DoubleProperty xSpeed = new SimpleDoubleProperty(5);
+	private DoubleProperty ySpeed = new SimpleDoubleProperty(1);
+	private final int RADIUS = 18;
+	
 
-	public Ball(int x, int y, Image img) {
-		ballImageView.setImage(img);
-		ballImageView.setX(x);
-		ballImageView.setY(y);
+	public Ball(int centerX, int centerY) {
+		super();
+		setCenterX(centerX);
+		setCenterY(centerY);
+		setRadius(RADIUS);
+		setFill(Color.FUCHSIA);
 	}
 
-	public void setXSpeed(int xSpeed) {
-		this.xSpeed = xSpeed;
+	public void setXSpeed(double xSpeed) {
+		this.xSpeed.set(xSpeed);
 	}
 
-	public int getXSpeed() {
-		return this.xSpeed;
+	public double getXSpeed() {
+		return this.xSpeed.get();
 	}
 
-	public void setYSpeed(int ySpeed) {
-		this.ySpeed = ySpeed;
+	public void setYSpeed(double ySpeed) {
+		this.ySpeed.set(ySpeed);
 	}
 
-	public int getYSpeed() {
-		return this.ySpeed;
+	public double getYSpeed() {
+		return this.ySpeed.get();
+	}
+	
+	
+	public double getX(){
+		return getCenterX();
+	}
+	
+	public double getY(){
+		return getCenterY();
+	}
+	
+	public void setX(double x){
+		setCenterX(x);
+	}
+	
+	public void setY(double y){
+		setCenterY(y);
 	}
 }

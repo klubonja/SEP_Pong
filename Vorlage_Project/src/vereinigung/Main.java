@@ -105,7 +105,6 @@ public class Main extends Application {
 		// button play
 		Button startGame = new Button("Play");
 		startGame.setEffect(dropShadow);
-		
 		startGame.setMinSize(150, 150);
 		startGame.setTextFill(Color.WHITE);
 		startGame.setStyle("-fx-font-size: 30 ;"
@@ -149,6 +148,7 @@ public class Main extends Application {
 				Platform.exit();
 			}
 		});
+		
 		// fehlermeldung
 		Label error = new Label("");
 		error.setStyle("-fx-font-size: 25");
@@ -186,8 +186,7 @@ public class Main extends Application {
 					try {
 						numberOfBalls = Integer.parseInt(ballNumber.getText());
 						if (numberOfBalls > 0){
-							newGame = new Controller(players,
-									numberOfBalls);
+							newGame = new Controller(players, numberOfBalls);
 							stage.close();
 						}
 					}catch (IllegalArgumentException e1) {
@@ -201,8 +200,7 @@ public class Main extends Application {
 					try {
 						numberOfBalls = Integer.parseInt(ballNumber.getText());
 						if (numberOfBalls > 0){
-							newGame = new Controller(players,
-									numberOfBalls);
+							newGame = new Controller(players, numberOfBalls);
 							stage.close();
 						}
 					}catch (IllegalArgumentException e1) {

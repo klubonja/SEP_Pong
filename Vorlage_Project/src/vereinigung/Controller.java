@@ -6,7 +6,9 @@ import java.awt.PointerInfo;
 import java.util.LinkedList;
 import java.util.List;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
+import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -16,9 +18,11 @@ import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.ImageCursor;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -72,9 +76,11 @@ public class Controller extends Stage {
 			public void handle(MouseEvent e) {
 				if (e.getButton() == MouseButton.SECONDARY) {
 					player1Mouse = true;
+					pongBoard.setCursor(Cursor.NONE);
 				}
 				if (e.getButton() == MouseButton.PRIMARY) {
 					player2Mouse = true;
+					pongBoard.setCursor(Cursor.NONE);
 				}
 			}
 		});
@@ -107,6 +113,7 @@ public class Controller extends Stage {
 				}
 			}
 		});
+		
 		// behandelt die ereignisse, die durch den knopfdruck ausgeloest werden
 		pongBoard.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@SuppressWarnings("incomplete-switch")
@@ -168,7 +175,6 @@ public class Controller extends Stage {
 			}
 		});
 
-		if (true) {
 			resultL = new Label("0");
 			resultL.setTranslateX(430);
 			resultL.setTranslateY(685);
@@ -190,7 +196,6 @@ public class Controller extends Stage {
 			root.getChildren().addAll(background2, player2.player,
 					player2.fireUp, player2.fireDown, player1.player,
 					player1.fireUp, player1.fireDown, resultL, resultR, win);
-		}
 		root.setFocusTraversable(true);
 
 		addBall();
@@ -224,9 +229,11 @@ public class Controller extends Stage {
 			public void handle(MouseEvent e) {
 				if (e.getButton() == MouseButton.SECONDARY) {
 					player1Mouse = true;
+					pongBoard.setCursor(Cursor.NONE);
 				}
 				if (e.getButton() == MouseButton.PRIMARY) {
 					player2Mouse = true;
+					pongBoard.setCursor(Cursor.NONE);
 				}
 			}
 		});
@@ -321,7 +328,7 @@ public class Controller extends Stage {
 			}
 		});
 
-		if (true) {
+		
 			resultL = new Label("0");
 			resultL.setTranslateX(450);
 			resultL.setTranslateY(685);
@@ -343,8 +350,7 @@ public class Controller extends Stage {
 			root.getChildren().addAll(background2, player2.player,
 					player2.fireUp, player2.fireDown, player1.player,
 					player1.fireUp, player1.fireDown, resultL, resultR, win);
-		}
-		root.setFocusTraversable(true);
+			root.setFocusTraversable(true);
 
 		for (int i = 0; i < balls; i++) {
 			addBall();
@@ -354,46 +360,49 @@ public class Controller extends Stage {
 		t.setCycleCount(Timeline.INDEFINITE);
 		t.play();
 
-		pongBoard.setCursor(Cursor.NONE);
+		//pongBoard.setCursor(Cursor.NONE);
 		this.setScene(pongBoard);
 		this.setResizable(false);
 		this.initStyle(StageStyle.UNDECORATED);
 		this.show();
 		this.root.requestFocus();
 	}
-
+	
+	
 	// fuegt einen Ball hinzu
 	public void addBall() {
-		Ball newBall = new Ball(480, 365, ballImage);
+		Ball newBall = new Ball(480, 365);
 		ballList.add(newBall);
-		root.getChildren().add(newBall.ballImageView);
+		root.getChildren().add(newBall);
+		scaleTrns(newBall);
+		newBall.setEffect(new Glow(0.7));
 	}
 
 	// ueberprueft, ob der Ball aus dem Fenster geflogen ist und ob einer der
 	// Spieler 21 Punkte erreicht hat
 	public void checkScore() {
 		for (Ball ball : ballList) {
-			if (ball.ballImageView.getX() >= 1000) {
+			if (ball.getX() >= 1020) {
 				ballList.remove(ball);
 				resultLeft.set("" + (Integer.parseInt(resultLeft.get()) + 1));
 			}
-			if (ball.ballImageView.getX() <= -30) {
+			if (ball.getX() <= -40) {
 				ballList.remove(ball);
 				resultRight.set("" + (Integer.parseInt(resultRight.get()) + 1));
 			}
 
 			if (Integer.parseInt(resultLeft.get()) >= 21) {
 				winMsg.set("Red player wins!");
-				newGameButton();
+				restartGameButton();
 			}
 			if (Integer.parseInt(resultRight.get()) >= 21) {
 				winMsg.set("Green player wins!");
-				newGameButton();
+				restartGameButton();
 			}
 		}
 	}
 	
-	public void newGameButton(){
+	public void restartGameButton(){
 		Button newGame = new Button("Restart Game");
 		newGame.setTranslateX(395);
 		newGame.setTranslateY(410);
@@ -401,10 +410,15 @@ public class Controller extends Stage {
 		newGame.setStyle("-fx-font-size: 30 ;"
 				+ "-fx-background-color: radial-gradient(radius 100%, aliceblue, lightsteelblue);"
 				+ "-fx-background-radius: 20");
+		
 		newGame.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent m){
-				
-			}
+				root.getChildren().remove(newGame);
+				resultLeft.set("0");
+				resultRight.set("0");
+				winMsg.set("");
+				addBall();
+				}
 		});
 		root.getChildren().add(newGame);
 	}
@@ -413,16 +427,16 @@ public class Controller extends Stage {
 	public void bounce() {
 		for (Ball ball : ballList) {
 			checkScore();
-			ball.ballImageView.setX(ball.ballImageView.getX()
+			ball.setX(ball.getX()
 					+ ball.getXSpeed());
-			ball.ballImageView.setY(ball.ballImageView.getY()
+			ball.setY(ball.getY()
 					+ ball.getYSpeed());
 			if (collision(ball)) {
 				ball.setXSpeed(ball.getXSpeed() * -1);
 				ballBounceOffPlayer(player1);
 				ballBounceOffPlayer(player2);
-			} else if (ball.ballImageView.getY() > 750
-					|| ball.ballImageView.getY() < 20) {
+			} else if (ball.getY() > 750
+					|| ball.getY() < 20) {
 				ball.setYSpeed(ball.getYSpeed() * -1);
 			}
 		}
@@ -430,8 +444,8 @@ public class Controller extends Stage {
 
 	// checks for collision
 	public boolean collision(Ball ball) {
-		if (ball.ballImageView.intersects(player2.player.getBoundsInParent())
-				|| ball.ballImageView.intersects(player1.player
+		if (ball.intersects(player2.player.getBoundsInParent())
+				|| ball.intersects(player1.player
 						.getBoundsInParent())) {
 			return true;
 		}
@@ -442,19 +456,32 @@ public class Controller extends Stage {
 	public void ballBounceOffPlayer(Paddle player) {
 		for (Ball ball : ballList) {
 			if (collision(ball)) {
-				if (ball.ballImageView.getY() >= player.player.getY()
-						&& ball.ballImageView.getY() <= player.player.getY() + 98) {
+				if (ball.getY() >= player.player.getY()
+						&& ball.getY() <= player.player.getY() + 98) {
 					if (ball.getYSpeed() > 0) {
 						ball.setYSpeed(ball.getYSpeed() * -1);
 					}
 				}
-				if (ball.ballImageView.getY() >= player.player.getY() + 98
-						&& ball.ballImageView.getY() <= player.player.getY() + 196) {
+				if (ball.getY() >= player.player.getY() + 98
+						&& ball.getY() <= player.player.getY() + 196) {
 					if (ball.getYSpeed() < 0) {
 						ball.setYSpeed(ball.getYSpeed() * -1);
 					}
 				}
 			}
 		}
+	}
+	
+	public void scaleTrns(Node node){
+		
+		ScaleTransition grow;
+		grow = new ScaleTransition();
+		grow.setDuration(Duration.millis(3000));
+		grow.setCycleCount(Animation.INDEFINITE);
+		grow.setNode(node);
+		grow.setToX(2f);
+		grow.setToY(2f);
+		grow.setAutoReverse(true);
+		grow.play();
 	}
 }
