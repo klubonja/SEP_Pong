@@ -1,16 +1,20 @@
 package vereinigung;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+
+import java.util.Random;
+
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 
 
 public class Ball extends Circle {
 	
 	// Vector x and y of the ball's speed
-	private DoubleProperty xSpeed = new SimpleDoubleProperty(5);
-	private DoubleProperty ySpeed = new SimpleDoubleProperty(1);
+	private double xSpeed; 
+	private double ySpeed;
 	private final int RADIUS = 18;
 	
 	/**
@@ -23,23 +27,33 @@ public class Ball extends Circle {
 		setCenterX(centerX);
 		setCenterY(centerY);
 		setRadius(RADIUS);
-		setFill(Color.FUCHSIA);
+		setXSpeed(2);
+		setYSpeed(1);
+		randomizeYSpeed();
+		Stop[] stops = new Stop[] { new Stop(0, Color.LIME), new Stop(1, Color.GREENYELLOW)};
+		LinearGradient lg1 = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, stops);
+		setFill(lg1);
+	}
+	
+	public void randomizeYSpeed() {
+		Random random = new Random();
+		ySpeed = ySpeed + random.nextDouble() - 1;
 	}
 
-	public void setXSpeed(double xSpeed) {
-		this.xSpeed.set(xSpeed);
+	public void setXSpeed(double x) {
+		this.xSpeed = x;
 	}
 
 	public double getXSpeed() {
-		return this.xSpeed.get();
+		return this.xSpeed;
 	}
 
-	public void setYSpeed(double ySpeed) {
-		this.ySpeed.set(ySpeed);
+	public void setYSpeed(double y) {
+		this.ySpeed = y;
 	}
 
 	public double getYSpeed() {
-		return this.ySpeed.get();
+		return this.ySpeed;
 	}
 	
 	

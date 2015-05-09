@@ -1,19 +1,22 @@
 package vereinigung;
 
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Paddle extends ImageView{
-	ImageView player = new ImageView();
-	ImageView fireUp = new ImageView();
-	ImageView fireDown = new ImageView();
-	public final int PADDLE_SPEED = 10;
+	
+	 private ImageView player = new ImageView();
+	private ImageView fireUp = new ImageView();
+	private ImageView fireDown = new ImageView();
+	public final int PADDLE_SPEED =10;
+	
 	
 	public Paddle(int x, int y, Image img, int fireUpX, int fireUpY,
 			Image fireUp, int fireDownX, int fireDownY, Image fireDown) {
-		player.setImage(img);
-		player.setX(x);
-		player.setY(y);
+		this.player.setImage(img);
+		this.player.setX(x);
+		this.player.setY(y);
 		this.fireUp.setImage(fireUp);
 		this.fireUp.setOpacity(0);
 		this.fireUp.setX(fireUpX);
@@ -22,8 +25,7 @@ public class Paddle extends ImageView{
 		this.fireDown.setOpacity(0);
 		this.fireDown.setX(fireDownX);
 		this.fireDown.setY(fireDownY);
-		
-	}
+		}
 	
 	public void moveUp() {
 		fireDown.setOpacity(100);
@@ -52,5 +54,19 @@ public class Paddle extends ImageView{
 	public void fadeFire(ImageView img){
 		img.setOpacity(0);
 	}
+	
+	public ImageView getPlayer(){
+		return this.player;
+	}
+	
+	public ImageView getFireDown(){
+		return this.fireDown;
+	}
+	
+	public ImageView getFireUp(){
+		return this.fireUp;
+	}
+	
+	
 
 }

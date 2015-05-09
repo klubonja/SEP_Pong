@@ -36,32 +36,35 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+@SuppressWarnings("unused")
 public class Controller extends Stage {
+	
+	
 	final Image gestreifteRemulanerHintergrund2 = new Image("/Hintergrund2.png");
 	final Image p1 = new Image("/Player1.png");
 	final Image p2 = new Image("/Player2.png");
 	final Image fireUp = new Image("/Player1FeuerUp.png");
 	final Image fireDown = new Image("/Player1FeuerDown.png");
-	final Image ballImage = new Image("/Ball.png");
-
-	// die Punkte von player2
+	
 	final StringProperty resultLeft = new SimpleStringProperty("0");
-	// die Punkte von player1
 	final StringProperty resultRight = new SimpleStringProperty("0");
-	// die Nachricht mit dem Geweinner
 	final StringProperty winMsg = new SimpleStringProperty("");
 
-	private Label resultL; // die Punkte von player2
-	private Label resultR; // die Punkte von player1
-	private Label win; // die Nachricht mit dem Geweinner
-
-	private Paddle player2;
-	private Paddle player1;
-	private List<Ball> ballList = new LinkedList<Ball>();
 	private Group root = new Group();
+
+	private Label resultL;
+	private Label resultR;
+	private Label win;
+	
+	private Paddle player1;
+	
+	private Paddle player2;
+	private List<Ball> ballList = new LinkedList<Ball>();
+	
 	private boolean allowPlayer2 = false;
 	private boolean player1Mouse = false;
 	private boolean player2Mouse = false;
+	
 	Timeline t;
 
 	// constructor for network game
@@ -92,9 +95,9 @@ public class Controller extends Stage {
 					Point b = a.getLocation();
 					SimpleDoubleProperty y = new SimpleDoubleProperty();
 					y.set((int) b.getY() - 80);
-					player1.player.yProperty().bind(y);
-					player1.fireUp.yProperty().bind(y);
-					player1.fireDown.yProperty().bind(y);
+					player1.getPlayer().yProperty().bind(y);
+					player1.getFireUp().yProperty().bind(y);
+					player1.getFireDown().yProperty().bind(y);
 					if (y.get() > 574) {
 						y.set(574);
 					}
@@ -104,9 +107,9 @@ public class Controller extends Stage {
 					Point b = a.getLocation();
 					SimpleDoubleProperty y = new SimpleDoubleProperty();
 					y.set((int) b.getY() - 80);
-					player2.player.yProperty().bind(y);
-					player1.fireUp.yProperty().bind(y);
-					player1.fireDown.yProperty().bind(y);
+					player2.getPlayer().yProperty().bind(y);
+					player2.getFireUp().yProperty().bind(y);
+					player2.getFireDown().yProperty().bind(y);
 					if (y.get() > 574) {
 						y.set(574);
 					}
@@ -160,16 +163,16 @@ public class Controller extends Stage {
 				KeyCode code = e.getCode();
 				switch (code) {
 				case UP:
-					player1.fadeFire(player1.fireDown);
+					player1.fadeFire(player1.getFireDown());
 					break;
 				case DOWN:
-					player1.fadeFire(player1.fireUp);
+					player1.fadeFire(player1.getFireUp());
 					break;
 				case W:
-					player2.fadeFire(player2.fireDown);
+					player2.fadeFire(player2.getFireDown());
 					break;
 				case S:
-					player2.fadeFire(player2.fireUp);
+					player2.fadeFire(player2.getFireUp());
 					break;
 				}
 			}
@@ -193,9 +196,9 @@ public class Controller extends Stage {
 			win.setFont(Font.font("Consolas", 80));
 			win.setTextFill(Color.WHITE);
 			win.textProperty().bind(winMsg);
-			root.getChildren().addAll(background2, player2.player,
-					player2.fireUp, player2.fireDown, player1.player,
-					player1.fireUp, player1.fireDown, resultL, resultR, win);
+			root.getChildren().addAll(background2, player2.getPlayer(),
+					player2.getFireUp(), player2.getFireDown(), player1.getPlayer(),
+					player1.getFireUp(), player1.getFireDown(), resultL, resultR, win);
 		root.setFocusTraversable(true);
 
 		addBall();
@@ -245,9 +248,9 @@ public class Controller extends Stage {
 					Point b = a.getLocation();
 					SimpleDoubleProperty y = new SimpleDoubleProperty();
 					y.set((int) b.getY() - 80);
-					player1.player.yProperty().bind(y);
-					player1.fireUp.yProperty().bind(y);
-					player1.fireDown.yProperty().bind(y);
+					player1.getPlayer().yProperty().bind(y);
+					player1.getFireUp().yProperty().bind(y);
+					player1.getFireDown().yProperty().bind(y);
 					if (y.get() > 574) {
 						y.set(574);
 					}
@@ -257,9 +260,9 @@ public class Controller extends Stage {
 					Point b = a.getLocation();
 					SimpleDoubleProperty y = new SimpleDoubleProperty();
 					y.set((int) b.getY() - 80);
-					player2.player.yProperty().bind(y);
-					player1.fireUp.yProperty().bind(y);
-					player1.fireDown.yProperty().bind(y);
+					player2.getPlayer().yProperty().bind(y);
+					player1.getFireUp().yProperty().bind(y);
+					player1.getFireDown().yProperty().bind(y);
 					if (y.get() > 574) {
 						y.set(574);
 					}
@@ -313,16 +316,16 @@ public class Controller extends Stage {
 				KeyCode code = e.getCode();
 				switch (code) {
 				case UP:
-					player1.fadeFire(player1.fireDown);
+					player1.fadeFire(player1.getFireDown());
 					break;
 				case DOWN:
-					player1.fadeFire(player1.fireUp);
+					player1.fadeFire(player1.getFireUp());
 					break;
 				case W:
-					player2.fadeFire(player2.fireDown);
+					player2.fadeFire(player2.getFireDown());
 					break;
 				case S:
-					player2.fadeFire(player2.fireUp);
+					player2.fadeFire(player2.getFireUp());
 					break;
 				}
 			}
@@ -347,14 +350,16 @@ public class Controller extends Stage {
 			win.setFont(Font.font("Consolas", 80));
 			win.setTextFill(Color.WHITE);
 			win.textProperty().bind(winMsg);
-			root.getChildren().addAll(background2, player2.player,
-					player2.fireUp, player2.fireDown, player1.player,
-					player1.fireUp, player1.fireDown, resultL, resultR, win);
+			root.getChildren().addAll(background2, player2.getPlayer(),
+					player2.getFireUp(), player2.getFireDown(), player1.getPlayer(),
+					player1.getFireUp(), player1.getFireDown(), resultL, resultR, win);
 			root.setFocusTraversable(true);
 
 		for (int i = 0; i < balls; i++) {
 			addBall();
-		}
+			}
+		
+		
 		KeyFrame keyFrame = new KeyFrame(new Duration(10), event -> bounce());
 		t = new Timeline(keyFrame);
 		t.setCycleCount(Timeline.INDEFINITE);
@@ -376,9 +381,9 @@ public class Controller extends Stage {
 	public void addBall() {
 		Ball newBall = new Ball(480, 365);
 		ballList.add(newBall);
-		root.getChildren().add(newBall);
 		scaleTrns(newBall);
 		newBall.setEffect(new Glow(0.7));
+		root.getChildren().add(newBall);
 	}
 
 	/**
@@ -386,12 +391,13 @@ public class Controller extends Stage {
 	 *  reached 21 points.
 	 */
 	public void checkScore() {
+		long startTime = System.currentTimeMillis();
 		for (Ball ball : ballList) {
-			if (ball.getX() >= 1020) {
+			if (ball.getX() >= 1050) {
 				ballList.remove(ball);
 				resultLeft.set("" + (Integer.parseInt(resultLeft.get()) + 1));
 			}
-			if (ball.getX() <= -40) {
+			if (ball.getX() <= -50) {
 				ballList.remove(ball);
 				resultRight.set("" + (Integer.parseInt(resultRight.get()) + 1));
 			}
@@ -405,6 +411,8 @@ public class Controller extends Stage {
 				restartGameButton();
 			}
 		}
+		long endTime = System.currentTimeMillis();
+
 	}
 	
 	/**
@@ -452,8 +460,8 @@ public class Controller extends Stage {
 
 	// checks for collision
 	public boolean collision(Ball ball) {
-		if (ball.intersects(player2.player.getBoundsInParent())
-				|| ball.intersects(player1.player
+		if (ball.intersects(player2.getPlayer().getBoundsInParent())
+				|| ball.intersects(player1.getPlayer()
 						.getBoundsInParent())) {
 			return true;
 		}
@@ -464,16 +472,20 @@ public class Controller extends Stage {
 	public void ballBounceOffPlayer(Paddle player) {
 		for (Ball ball : ballList) {
 			if (collision(ball)) {
-				if (ball.getY() >= player.player.getY()
-						&& ball.getY() <= player.player.getY() + 98) {
+				if (ball.getY() >= player.getPlayer().getY()
+						&& ball.getY() <= player.getPlayer().getY() + 98) {
 					if (ball.getYSpeed() > 0) {
+						ball.randomizeYSpeed();
 						ball.setYSpeed(ball.getYSpeed() * -1);
+						ball.setXSpeed(ball.getXSpeed() * 1.25);
 					}
 				}
-				if (ball.getY() >= player.player.getY() + 98
-						&& ball.getY() <= player.player.getY() + 196) {
+				if (ball.getY() >= player.getPlayer().getY() + 98
+						&& ball.getY() <= player.getPlayer().getY() + 196) {
 					if (ball.getYSpeed() < 0) {
+						ball.randomizeYSpeed();
 						ball.setYSpeed(ball.getYSpeed() * -1);
+						ball.setXSpeed(ball.getXSpeed() * 1.25);
 					}
 				}
 			}
