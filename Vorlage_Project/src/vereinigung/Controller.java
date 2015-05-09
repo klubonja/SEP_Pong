@@ -369,7 +369,10 @@ public class Controller extends Stage {
 	}
 	
 	
-	// fuegt einen Ball hinzu
+	/**
+	 * Adds a new ball to the center of the game field, also adds a scale transition and glow
+	 * effect to the ball.
+	 */
 	public void addBall() {
 		Ball newBall = new Ball(480, 365);
 		ballList.add(newBall);
@@ -378,8 +381,10 @@ public class Controller extends Stage {
 		newBall.setEffect(new Glow(0.7));
 	}
 
-	// ueberprueft, ob der Ball aus dem Fenster geflogen ist und ob einer der
-	// Spieler 21 Punkte erreicht hat
+	/**
+	 *  Checks if the ball has bounced out of the border and if one player has
+	 *  reached 21 points.
+	 */
 	public void checkScore() {
 		for (Ball ball : ballList) {
 			if (ball.getX() >= 1020) {
@@ -402,6 +407,9 @@ public class Controller extends Stage {
 		}
 	}
 	
+	/**
+	 * Spawns a new button to restart the game when the game is won by a player.
+	 */
 	public void restartGameButton(){
 		Button newGame = new Button("Restart Game");
 		newGame.setTranslateX(395);
@@ -472,6 +480,10 @@ public class Controller extends Stage {
 		}
 	}
 	
+	/**
+	 * Adds a scale transition to a Node.
+	 * @param node The Node to apply the effect.
+	 */
 	public void scaleTrns(Node node){
 		
 		ScaleTransition grow;

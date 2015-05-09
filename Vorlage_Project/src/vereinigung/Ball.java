@@ -8,13 +8,16 @@ import javafx.scene.shape.Circle;
 
 public class Ball extends Circle {
 	
-
 	// Vector x and y of the ball's speed
 	private DoubleProperty xSpeed = new SimpleDoubleProperty(5);
 	private DoubleProperty ySpeed = new SimpleDoubleProperty(1);
 	private final int RADIUS = 18;
 	
-
+	/**
+	 * Constructor of the class Ball.
+	 * @param centerX Coordinate X of the ball center.
+	 * @param centerY Coordinate Y of the ball center.
+	 */
 	public Ball(int centerX, int centerY) {
 		super();
 		setCenterX(centerX);
