@@ -103,7 +103,6 @@ public class JSONServer extends Application{
 	}
 
 	public void start(Stage stage) throws Exception {
-		game = new Controller();
 		JSONServer server = new JSONServer();
 		try {
 			server.start(7777);
