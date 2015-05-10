@@ -26,6 +26,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -221,10 +223,12 @@ public class Controller extends Stage {
 		if(!pl3 && !pl4){
 		for (Ball ball : ballList){
 			if(ball.getCenterX()>=630){
+				ballOutSound();
 				ballList.remove(ball);
 				resultLeft.set("" + (Integer.parseInt(resultLeft.get()) + 1));
 			}
 			if(ball.getCenterX()<=-30){
+				ballOutSound();
 				ballList.remove(ball);
 				resultRight.set("" + (Integer.parseInt(resultRight.get()) + 1));
 				}
@@ -244,11 +248,13 @@ public class Controller extends Stage {
 		for (Ball ball : ballList) {
 			if (pl1 && ball.getLayoutBounds().intersects(player1.getLayoutBounds())) {
 				ball.collisionHorizontal();
+				bounceSound();
 				ball.move();
 				continue;
 			}
 			else if (pl2 && ball.getLayoutBounds().intersects(player2.getLayoutBounds())) {
 				ball.collisionHorizontal();
+				bounceSound();
 				ball.move();
 				continue;
 			}
@@ -269,7 +275,7 @@ public class Controller extends Stage {
 	public void winnerTransition(int i){
 		
 		winMsg.set("Player " + i + " wins!");
-		
+		applauseSound();
 		FillTransition ft = new FillTransition(Duration.millis(3000), field, Color.GREEN, Color.FUCHSIA);
 	     ft.setCycleCount(10);
 	     ft.setAutoReverse(true);
@@ -278,7 +284,33 @@ public class Controller extends Stage {
 		
 		
 	}
-			
-
 	
+	/**
+	 * Sound: Win Message
+	 */
+	public static void applauseSound(){
+		Media mediaFile1 = new Media("file:///C:/Users/Maximilian/workspace/Copy%20of%20SEPSS15_Vorprojekt1/media/Applause.mp3");
+		MediaPlayer mediaplayer1 = new MediaPlayer(mediaFile1);
+		mediaplayer1.setAutoPlay(true);
+		mediaplayer1.setVolume(0.5);
+	}
+	/**
+	 * Sound when a ball hits a paddle
+	 */
+	public void bounceSound(){
+		Media mediaFile2 = new Media("file:///C:/Users/Maximilian/workspace/Copy%20of%20SEPSS15_Vorprojekt1/media/BEEPDROP.mp3");
+		MediaPlayer mediaplayer2 = new MediaPlayer(mediaFile2);
+		mediaplayer2.setAutoPlay(true);
+		mediaplayer2.setVolume(0.5);
+	}
+	/**
+	 * Sound when a ball goes out 
+	 */
+	public void ballOutSound(){
+		Media mediaFile3 = new Media("file:///C:/Users/Maximilian/workspace/Copy%20of%20SEPSS15_Vorprojekt1/media/BEEPARCA.mp3");
+		MediaPlayer mediaplayer3 = new MediaPlayer(mediaFile3);
+		mediaplayer3.setAutoPlay(true);
+		mediaplayer3.setVolume(0.5);
+	}
 }
+		
