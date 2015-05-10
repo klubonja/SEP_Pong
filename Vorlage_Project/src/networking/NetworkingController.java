@@ -4,6 +4,7 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.PointerInfo;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -26,6 +27,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -44,8 +47,11 @@ public class NetworkingController extends Application {
 	// Ist dann wahr, wenn ein Spieler gewonnen hat
 	private boolean gameOver = false;
 	private Boolean gameStart = true;
+	
+	public int updater = 0;
 
 	private ServerSocket serverSocket;
+	private Socket socket;
 	@SuppressWarnings("unused")
 	private int port;
 	public static int clients = 0;
@@ -59,56 +65,43 @@ public class NetworkingController extends Application {
 
 	public void accept() throws IOException {
 		while (true) {
-			Socket socket = serverSocket.accept();
-			Runnable r = new MyThreadHandler(socket);
-			Thread t = new Thread(r);
-			t.start();
-//			startBall();
+			socket = serverSocket.accept();
+			clients++;
+			System.out.println(clients
+					+ " JSONClient(s) connected on port: "
+					+ socket.getPort());
+			new Thread() {
+				public void run() {
+					while (true) {
+						try {
+							int received = receive();
+							send(received);
+						} catch (IOException e) {
+
+						}
+					}
+				}
+			}.start();
+			// startBall();
 		}
 	}
 
-	public static class MyThreadHandler implements Runnable {
-		private Socket socket;
+	public int receive() throws IOException {
+		BufferedReader in = new BufferedReader(new InputStreamReader(
+				socket.getInputStream(), "UTF-8"));
+		String line = in.readLine();
+		int message = Integer.parseInt(line);
+		updater = message;
+		System.out.println(message);
+		return message;
+	}
 
-		MyThreadHandler(Socket socket) {
-			this.socket = socket;
-		}
-
-		@Override
-		public void run() {
-			clients++;
-			System.out.println(clients + " JSONClient(s) connected on port: "
-					+ socket.getPort());
-			try {
-				// For JSON Protocol
-				int received = receive();
-				send(received);
-			} catch (IOException e) {
-
-			}
-		}
-
-		public void closeSocket() throws IOException {
-			socket.close();
-		}
-
-		public int receive() throws IOException {
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					socket.getInputStream(), "UTF-8"));
-			String line = in.readLine();
-			int message = Integer.parseInt(line);
-//			newGame.player1.setY(message);
-			System.out.println(message);
-			return message;
-		}
-
-		public void send(int message) throws IOException {
-			OutputStreamWriter out = new OutputStreamWriter(
-					socket.getOutputStream(), "UTF-8");
-			out.write(message + "\n");
-			out.flush();
-			System.out.println("Sent to client: " + message);
-		}
+	public void send(int message) throws IOException {
+		OutputStreamWriter out = new OutputStreamWriter(
+				socket.getOutputStream(), "UTF-8");
+		out.write(message + "\n");
+		out.flush();
+		System.out.println("Sent to client: " + message);
 	}
 
 	/**
@@ -247,9 +240,9 @@ public class NetworkingController extends Application {
 	}
 
 	public void startBall() {
-		if(gameStart){
-		newGame.t.play();
-		gameStart = false;
+		if (gameStart) {
+			newGame.t.play();
+			gameStart = false;
 		}
 	}
 
@@ -283,6 +276,7 @@ public class NetworkingController extends Application {
 				.hasNext();) {
 			BallView ball = iterator.next();
 			if (ball.getCenterX() >= 1020) {
+				ballOutSound();
 				try {
 					iterator.remove();
 				} catch (ConcurrentModificationException e) {
@@ -291,6 +285,7 @@ public class NetworkingController extends Application {
 						+ (Integer.parseInt(newGame.resultLeft.get()) + 1));
 			}
 			if (ball.getCenterX() <= -40) {
+				ballOutSound();
 				try {
 					iterator.remove();
 				} catch (ConcurrentModificationException e) {
@@ -301,14 +296,16 @@ public class NetworkingController extends Application {
 
 			if (Integer.parseInt(newGame.resultLeft.get()) >= 21) {
 				gameOver = true;
+				applauseSound();
 				newGame.pongBoard.setCursor(Cursor.DEFAULT);
-				newGame.winMsg.set("Red player wins!");
+				newGame.winMsg.set("Green player wins!");
 				restartGameButton();
 			}
 			if (Integer.parseInt(newGame.resultRight.get()) >= 21) {
 				gameOver = true;
+				applauseSound();
 				newGame.pongBoard.setCursor(Cursor.DEFAULT);
-				newGame.winMsg.set("Green player wins!");
+				newGame.winMsg.set("Red player wins!");
 				restartGameButton();
 			}
 		}
@@ -378,6 +375,7 @@ public class NetworkingController extends Application {
 	 * @param player
 	 */
 	public void ballBounceOffPlayer(ImageView player) {
+		bounceSound();
 		for (BallView ball : newGame.ballList) {
 			if (collision(ball)) {
 				if (ball.getCenterY() >= player.getY()
@@ -475,6 +473,40 @@ public class NetworkingController extends Application {
 	 */
 	public void fadeFire(ImageView img) {
 		img.setOpacity(0);
+	}
+
+	/**
+	 * Laesst ein applaudierendes Geraeusch spielen, sobald einer der Spieler
+	 * gewonnen hat.
+	 */
+	public static void applauseSound() {
+		String sound1 = "media/Applause.mp3";
+		Media mediaFile1 = new Media(new File(sound1).toURI().toString());
+		MediaPlayer mediaplayer1 = new MediaPlayer(mediaFile1);
+		mediaplayer1.setAutoPlay(true);
+		mediaplayer1.setVolume(0.5);
+	}
+
+	/**
+	 * Laesst ein Geraeusch spielen, sobald ein Ball einen Schlaeger erwischt.
+	 */
+	public void bounceSound() {
+		String sound2 = "media/BEEPDROP.mp3";
+		Media mediaFile2 = new Media(new File(sound2).toURI().toString());
+		MediaPlayer mediaplayer2 = new MediaPlayer(mediaFile2);
+		mediaplayer2.setAutoPlay(true);
+		mediaplayer2.setVolume(0.5);
+	}
+
+	/**
+	 * Laesst ein Geraeusch spielen, sobald ein Ball aus dem Fenster fliegt.
+	 */
+	public void ballOutSound() {
+		String sound3 = "media/BEEPARCA.mp3";
+		Media mediaFile3 = new Media(new File(sound3).toURI().toString());
+		MediaPlayer mediaplayer3 = new MediaPlayer(mediaFile3);
+		mediaplayer3.setAutoPlay(true);
+		mediaplayer3.setVolume(0.5);
 	}
 
 	/**

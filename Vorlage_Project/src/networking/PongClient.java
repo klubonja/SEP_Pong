@@ -4,6 +4,7 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.PointerInfo;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -28,6 +29,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -292,6 +295,7 @@ public class PongClient extends Application {
 				.hasNext();) {
 			BallView ball = iterator.next();
 			if (ball.getCenterX() >= 1020) {
+				ballOutSound();
 				try {
 					iterator.remove();
 				} catch (ConcurrentModificationException e) {
@@ -300,6 +304,7 @@ public class PongClient extends Application {
 						+ (Integer.parseInt(newGame.resultLeft.get()) + 1));
 			}
 			if (ball.getCenterX() <= -40) {
+				ballOutSound();
 				try {
 					iterator.remove();
 				} catch (ConcurrentModificationException e) {
@@ -310,14 +315,16 @@ public class PongClient extends Application {
 
 			if (Integer.parseInt(newGame.resultLeft.get()) >= 21) {
 				gameOver = true;
+				applauseSound();
 				newGame.pongBoard.setCursor(Cursor.DEFAULT);
-				newGame.winMsg.set("Red player wins!");
+				newGame.winMsg.set("Green player wins!");
 				restartGameButton();
 			}
 			if (Integer.parseInt(newGame.resultRight.get()) >= 21) {
 				gameOver = true;
+				applauseSound();
 				newGame.pongBoard.setCursor(Cursor.DEFAULT);
-				newGame.winMsg.set("Green player wins!");
+				newGame.winMsg.set("Red player wins!");
 				restartGameButton();
 			}
 		}
@@ -388,6 +395,7 @@ public class PongClient extends Application {
 	 */
 	public void ballBounceOffPlayer(ImageView player) {
 		for (BallView ball : newGame.ballList) {
+			bounceSound();
 			if (collision(ball)) {
 				if (ball.getCenterY() >= player.getY()
 						&& ball.getCenterY() <= player.getY() + 98) {
@@ -512,6 +520,40 @@ public class PongClient extends Application {
 	 */
 	public void fadeFire(ImageView img) {
 		img.setOpacity(0);
+	}
+
+	/**
+	 * Laesst ein applaudierendes Geraeusch spielen, sobald einer der Spieler
+	 * gewonnen hat.
+	 */
+	public static void applauseSound() {
+		String sound1 = "media/Applause.mp3";
+		Media mediaFile1 = new Media(new File(sound1).toURI().toString());
+		MediaPlayer mediaplayer1 = new MediaPlayer(mediaFile1);
+		mediaplayer1.setAutoPlay(true);
+		mediaplayer1.setVolume(0.5);
+	}
+
+	/**
+	 * Laesst ein Geraeusch spielen, sobald ein Ball einen Schlaeger erwischt.
+	 */
+	public void bounceSound() {
+		String sound2 = "media/BEEPDROP.mp3";
+		Media mediaFile2 = new Media(new File(sound2).toURI().toString());
+		MediaPlayer mediaplayer2 = new MediaPlayer(mediaFile2);
+		mediaplayer2.setAutoPlay(true);
+		mediaplayer2.setVolume(0.5);
+	}
+
+	/**
+	 * Laesst ein Geraeusch spielen, sobald ein Ball aus dem Fenster fliegt.
+	 */
+	public void ballOutSound() {
+		String sound3 = "media/BEEPARCA.mp3";
+		Media mediaFile3 = new Media(new File(sound3).toURI().toString());
+		MediaPlayer mediaplayer3 = new MediaPlayer(mediaFile3);
+		mediaplayer3.setAutoPlay(true);
+		mediaplayer3.setVolume(0.5);
 	}
 
 	/**
