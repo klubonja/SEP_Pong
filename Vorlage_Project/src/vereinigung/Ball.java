@@ -1,35 +1,74 @@
 package vereinigung;
 
-import javafx.animation.Timeline;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 
-public class Ball extends ImageView {
-	ImageView ballImageView = new ImageView();
+/**
+ * Die Klasse Ball repraesentiert das Model von dem Ball. Sie enthaelt die
+ * Koordinaten
+ * 
+ * @author GestreifteRemulaner
+ *
+ */
+public class Ball {
+	private DoubleProperty xSpeed = new SimpleDoubleProperty(5);
+	private DoubleProperty ySpeed = new SimpleDoubleProperty(1);
+	private SimpleDoubleProperty centerX = new SimpleDoubleProperty(480);
+	private SimpleDoubleProperty centerY = new SimpleDoubleProperty(365);
 
-	// Vector x and y of the ball's speed
-	private int xSpeed = 3;
-	private int ySpeed = 1;
-
-	public Ball(int x, int y, Image img) {
-		ballImageView.setImage(img);
-		ballImageView.setX(x);
-		ballImageView.setY(y);
+	/**
+	 * Setter fuer die Geschwindigkeit des Balls auf der X-Koordinate.
+	 * 
+	 * @param xSpeed
+	 *            Ein Double.
+	 */
+	public void setXSpeed(double xSpeed) {
+		this.xSpeed.set(xSpeed);
 	}
 
-	public void setXSpeed(int xSpeed) {
-		this.xSpeed = xSpeed;
+	/**
+	 * Getter fuer die Geschwindigkeit des Balls auf der X-Koordinate.
+	 * 
+	 * @return Die Geschwindigkeit des Balls auf der X-Koordinate.
+	 */
+	public double getXSpeed() {
+		return this.xSpeed.get();
 	}
 
-	public int getXSpeed() {
-		return this.xSpeed;
+	/**
+	 * Setter fuer die Geschwindigkeit des Balls auf der Y-Koordinate.
+	 * 
+	 * @param Ein
+	 *            Double.
+	 */
+	public void setYSpeed(double ySpeed) {
+		this.ySpeed.set(ySpeed);
 	}
 
-	public void setYSpeed(int ySpeed) {
-		this.ySpeed = ySpeed;
+	/**
+	 * Getter fuer die Geschwindigkeit des Balls auf der Y-Koordinate.
+	 * 
+	 * @return Die Geschwindigkeit des Balls auf der Y-Koordinate.
+	 */
+	public double getYSpeed() {
+		return this.ySpeed.get();
 	}
 
-	public int getYSpeed() {
-		return this.ySpeed;
+	/**
+	 * Getter fuer die X-Koordinate des Mittelpunktes des Balls.
+	 * 
+	 * @return Die X-Koordinate des Mittelpunktes des Balls.
+	 */
+	public SimpleDoubleProperty getCenterXProperty() {
+		return centerX;
+	}
+
+	/**
+	 * Getter fuer die Y-Koordinate des Mittelpunktes des Balls.
+	 * 
+	 * @return Die Y-Koordinate des Mittelpunktes des Balls.
+	 */
+	public SimpleDoubleProperty getCenterYProperty() {
+		return centerY;
 	}
 }

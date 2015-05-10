@@ -1,56 +1,59 @@
 package vereinigung;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
-public class Paddle extends ImageView{
-	ImageView player = new ImageView();
-	ImageView fireUp = new ImageView();
-	ImageView fireDown = new ImageView();
+/**
+ * Die Klasse Paddle repraesentiert das Model von dem Spieler und enthaelt die
+ * Koordinaten und die Geschwindigkeit des Schlaegers.
+ * 
+ * @author GestreifteRemulaner
+ */
+public class Paddle {
+	private int x, y;
 	public final int PADDLE_SPEED = 10;
-	
-	public Paddle(int x, int y, Image img, int fireUpX, int fireUpY,
-			Image fireUp, int fireDownX, int fireDownY, Image fireDown) {
-		player.setImage(img);
-		player.setX(x);
-		player.setY(y);
-		this.fireUp.setImage(fireUp);
-		this.fireUp.setOpacity(0);
-		this.fireUp.setX(fireUpX);
-		this.fireUp.setY(fireUpY);
-		this.fireDown.setImage(fireDown);
-		this.fireDown.setOpacity(0);
-		this.fireDown.setX(fireDownX);
-		this.fireDown.setY(fireDownY);
-		
-	}
-	
-	public void moveUp() {
-		fireDown.setOpacity(100);
-		player.setY(player.getY() - PADDLE_SPEED);
-		fireUp.setY(fireUp.getY() - PADDLE_SPEED);
-		fireDown.setY(fireDown.getY() - PADDLE_SPEED);
-		if (player.getY() < 0) {
-			player.setY(0);
-			fireUp.setY(-57);
-			fireDown.setY(196);
-		}
+
+	/**
+	 * Getter fuer die X-Koordinate.
+	 * 
+	 * @return Die X-Koordinate.
+	 */
+	public int getX() {
+		return x;
 	}
 
-	public void moveDown() {
-		fireUp.setOpacity(100);
-		player.setY(player.getY() + PADDLE_SPEED);
-		fireUp.setY(fireUp.getY() + PADDLE_SPEED);
-		fireDown.setY(fireDown.getY() + PADDLE_SPEED);
-		if (player.getY() + player.getFitHeight() > 570) {
-			player.setY(570 - player.getFitHeight());
-			fireUp.setY(570 - player.getFitHeight() - 57);
-			fireDown.setY(769);
-		}
+	/**
+	 * Setter fuer die X-Koordinate.
+	 * 
+	 * @param x
+	 *            Ein Integer.
+	 */
+	public void setX(int x) {
+		this.x = x;
 	}
 
-	public void fadeFire(ImageView img){
-		img.setOpacity(0);
+	/**
+	 * Getter fuer die Y-Koordinate.
+	 * 
+	 * @return Die Y-Koordinate.
+	 */
+	public int getY() {
+		return y;
 	}
 
+	/**
+	 * Setter fuer die Y-Koordinate.
+	 * 
+	 * @param y
+	 *            Ein Integer.
+	 */
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	/**
+	 * Getter fuer die Geschwindigkeit des Schlaegers.
+	 * 
+	 * @return Die Geschwindigkeit des Schlaegers.
+	 */
+	public int getSpeed() {
+		return PADDLE_SPEED;
+	}
 }

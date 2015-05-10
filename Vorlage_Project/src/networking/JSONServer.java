@@ -11,15 +11,11 @@ import java.net.Socket;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-/**
- * Created by laith on 04/05/15.
- */
 public class JSONServer extends Application{
 
 	private ServerSocket serverSocket;
 	private int port;
 	public static int clients = 0;
-	Controller game;
 
 	public void establish(int port) throws IOException {
 		this.port = port;
