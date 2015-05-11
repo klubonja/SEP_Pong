@@ -47,8 +47,10 @@ public class NetworkingController extends Application {
 	// Ist dann wahr, wenn ein Spieler gewonnen hat
 	private boolean gameOver = false;
 	private Boolean gameStart = true;
-	
-	public int updater = 0;
+	Timeline timer;
+
+	private int updater = 304;
+	private int receivedBall = 0;
 
 	private ServerSocket serverSocket;
 	private Socket socket;
@@ -60,30 +62,27 @@ public class NetworkingController extends Application {
 	public void establish(int port) throws IOException {
 		this.port = port;
 		serverSocket = new ServerSocket(port);
-		System.out.println("JSONServer has been established on port " + port);
+		System.out.println("Server has been established on port " + port);
 	}
 
 	public void accept() throws IOException {
-		while (true) {
-			socket = serverSocket.accept();
-			clients++;
-			System.out.println(clients
-					+ " JSONClient(s) connected on port: "
-					+ socket.getPort());
-			new Thread() {
-				public void run() {
-					while (true) {
-						try {
-							int received = receive();
-							send(received);
-						} catch (IOException e) {
+		socket = serverSocket.accept();
+		clients++;
+		System.out.println(clients + " Client(s) connected on port: "
+				+ socket.getPort());
+		new Thread() {
+			public void run() {
+				while (true) {
+					try {
+						@SuppressWarnings("unused")
+						int received = receive();
+					} catch (IOException e) {
 
-						}
 					}
 				}
-			}.start();
-			// startBall();
-		}
+			}
+		}.start();
+		startBall();
 	}
 
 	public int receive() throws IOException {
@@ -91,8 +90,11 @@ public class NetworkingController extends Application {
 				socket.getInputStream(), "UTF-8"));
 		String line = in.readLine();
 		int message = Integer.parseInt(line);
-		updater = message;
-		System.out.println(message);
+		if (message == -1337) {
+			receivedBall = message;
+		} else {
+			updater = message;
+		}
 		return message;
 	}
 
@@ -101,7 +103,6 @@ public class NetworkingController extends Application {
 				socket.getOutputStream(), "UTF-8");
 		out.write(message + "\n");
 		out.flush();
-		System.out.println("Sent to client: " + message);
 	}
 
 	/**
@@ -115,6 +116,7 @@ public class NetworkingController extends Application {
 		newGame = new View2(false);
 		addBall();
 		playGame();
+		update();
 	}
 
 	/**
@@ -196,16 +198,21 @@ public class NetworkingController extends Application {
 					}
 					break;
 				case B:
+					try {
+						send(-1337);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 					addBall();
 					bounce();
 					break;
 				case Q:
-					Platform.exit();
 					try {
 						serverSocket.close();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
+					Platform.exit();
 					break;
 				}
 			}
@@ -250,7 +257,7 @@ public class NetworkingController extends Application {
 	 * Fuegt einen Ball hinzu und laesst den Ball pulsieren.
 	 */
 	public void addBall() {
-		if (!gameOver) {
+		if (!gameOver || receivedBall == -5) {
 			BallView newBall = new BallView(480, 365, 10);
 			newBall.centerXProperty().bindBidirectional(
 					newBall.ballModel.getCenterXProperty());
@@ -260,7 +267,22 @@ public class NetworkingController extends Application {
 			newGame.ballList.add(newBall);
 			newGame.root.getChildren().add(newBall);
 			scaleTrns(newBall);
+			receivedBall = 0;
 		}
+	}
+
+	public void updatePosition() {
+		newGame.player1.setY(updater);
+		if(receivedBall == -1337){
+			addBall();
+		}
+	}
+
+	public void update() {
+		timer = new Timeline(new KeyFrame(new Duration(10),
+				ae -> updatePosition()));
+		timer.setCycleCount(Animation.INDEFINITE);
+		timer.play();
 	}
 
 	/**
@@ -435,8 +457,13 @@ public class NetworkingController extends Application {
 		fireUp.setY(fireUp.getY() - speed);
 		if (player.getY() < 0) {
 			player.setY(0);
-			fireDown.setY(-57);
-			fireUp.setY(196);
+			fireUp.setY(-57);
+			fireDown.setY(196);
+		}
+		try {
+			send((int) newGame.player2.getY());
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -462,6 +489,11 @@ public class NetworkingController extends Application {
 			player.setY(570 - player.getFitHeight());
 			fireUp.setY(570 - player.getFitHeight() - 57);
 			fireDown.setY(769);
+		}
+		try {
+			send((int) newGame.player2.getY());
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

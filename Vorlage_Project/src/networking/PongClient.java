@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ConnectException;
+import java.net.InetAddress;
 import java.net.NoRouteToHostException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -55,6 +56,16 @@ public class PongClient extends Application {
 	private final String DEFAULT_HOST = "localhost";
 	Controller game;
 
+	private int updater = 304;
+	private int receivedBall = 0;
+
+	/**
+	 * Erstellt ein Client Socket mit host und port.
+	 * 
+	 * @param host
+	 * @param port
+	 * @throws IOException
+	 */
 	public void connect(String host, int port) throws IOException {
 		this.host = host;
 		this.port = port;
@@ -63,11 +74,29 @@ public class PongClient extends Application {
 	}
 
 	/**
-	 * use the JSON Protocol to receive a json object as String from the client
-	 * and reconstructs that object
-	 *
-	 * @return JSONObejct with the same state (data) as the JSONObject the
-	 *         client sent as a String msg.
+	 * Hoert auf Nachrichten von dem Server und nimmt sie an.
+	 * 
+	 * @throws IOException
+	 */
+	public void approve() throws IOException {
+		new Thread() {
+			public void run() {
+				while (true) {
+					try {
+						@SuppressWarnings("unused")
+						int received = receive();
+					} catch (IOException e) {
+					}
+				}
+			}
+		}.start();
+		startBall();
+	}
+
+	/**
+	 * Liest die naechste Zeile und macht daraus ein Int.
+	 * 
+	 * @return
 	 * @throws IOException
 	 */
 	public int receive() throws IOException {
@@ -75,10 +104,21 @@ public class PongClient extends Application {
 				socket.getInputStream(), "UTF-8"));
 		String line = in.readLine();
 		int message = Integer.parseInt(line);
-		System.out.println("Got from server: " + " " + message);
+		if (message == -1337) {
+			receivedBall = message;
+		} else {
+			updater = message;
+		}
 		return message;
 	}
 
+	/**
+	 * Schickt eine Nachricht zum Server.
+	 * 
+	 * @param message
+	 *            Die Nachricht.
+	 * @throws IOException
+	 */
 	public void send(int message) throws IOException {
 		OutputStreamWriter out = new OutputStreamWriter(
 				socket.getOutputStream(), "UTF-8");
@@ -87,10 +127,20 @@ public class PongClient extends Application {
 		System.out.println("Sent to server: " + " " + message);
 	}
 
+	/**
+	 * Getter fuer den Host.
+	 * 
+	 * @return
+	 */
 	public String getHost() {
 		return this.host;
 	}
 
+	/**
+	 * Getter fuer den Client Socket.
+	 * 
+	 * @return
+	 */
 	public Socket getSocket() {
 		return this.socket;
 	}
@@ -104,6 +154,7 @@ public class PongClient extends Application {
 	// Ist dann wahr, wenn ein Spieler gewonnen hat
 	private boolean gameOver = false;
 	private Boolean gameStart = true;
+	Timeline timer;
 
 	/**
 	 * Eine Methode, die dazu da ist, um das Spiel zu starten und die Rolle des
@@ -116,6 +167,7 @@ public class PongClient extends Application {
 		newGame = new View2(false);
 		addBall();
 		playGame();
+		update();
 	}
 
 	/**
@@ -126,8 +178,11 @@ public class PongClient extends Application {
 		new Thread() {
 			public void run() {
 				try {
+					// InetAddress addr = InetAddress.getLocalHost();
+					// String ip = "138.246.2.135";
 					connect("localhost", 7777);
-					startBall();
+					System.out.println("I am this far.");
+					approve();
 				}
 
 				catch (ConnectException e) {
@@ -226,6 +281,11 @@ public class PongClient extends Application {
 					}
 					break;
 				case B:
+					try {
+						send(-1337);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 					addBall();
 					bounce();
 					break;
@@ -258,6 +318,9 @@ public class PongClient extends Application {
 		newGame.win.textProperty().bind(newGame.winMsg);
 	}
 
+	/**
+	 * Startet die Spielanimation.
+	 */
 	public void startBall() {
 		if (gameStart) {
 			newGame.t.play();
@@ -269,7 +332,7 @@ public class PongClient extends Application {
 	 * Fuegt einen Ball hinzu und laesst den Ball pulsieren.
 	 */
 	public void addBall() {
-		if (!gameOver) {
+		if (!gameOver || receivedBall > 0) {
 			BallView newBall = new BallView(480, 365, 10);
 			newBall.centerXProperty().bindBidirectional(
 					newBall.ballModel.getCenterXProperty());
@@ -279,7 +342,30 @@ public class PongClient extends Application {
 			newGame.ballList.add(newBall);
 			newGame.root.getChildren().add(newBall);
 			scaleTrns(newBall);
+			receivedBall = 0;
 		}
+	}
+
+	/**
+	 * Aendert die Position des Gegners und fuegt einen Ball hinzu, wenn der
+	 * Gegner einen Ball hinzufuegen will.
+	 */
+	public void updatePosition() {
+		newGame.player2.setY(updater);
+		if (receivedBall == -1337) {
+			addBall();
+		}
+	}
+
+	/**
+	 * Startet eine Timeline, die dafuer sorgt, dass die Aenderungen, die von
+	 * dem Gegner verursacht sind, auf dem eigenen Bildschirm erscheinen.
+	 */
+	public void update() {
+		timer = new Timeline(new KeyFrame(new Duration(10),
+				ae -> updatePosition()));
+		timer.setCycleCount(Animation.INDEFINITE);
+		timer.play();
 	}
 
 	/**
@@ -454,23 +540,14 @@ public class PongClient extends Application {
 		fireUp.setY(fireUp.getY() - speed);
 		if (player.getY() < 0) {
 			player.setY(0);
-			fireDown.setY(-57);
-			fireUp.setY(196);
+			fireUp.setY(-57);
+			fireDown.setY(196);
 		}
 		try {
-			this.send((int) player.getY());
+			send((int) newGame.player1.getY());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		new Thread() {
-			public void run() {
-				try {
-					receive();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			}
-		}.start();
 	}
 
 	/**
@@ -497,19 +574,10 @@ public class PongClient extends Application {
 			fireDown.setY(769);
 		}
 		try {
-			this.send((int) player.getY());
+			send((int) newGame.player1.getY());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		new Thread() {
-			public void run() {
-				try {
-					receive();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			}
-		}.start();
 	}
 
 	/**
