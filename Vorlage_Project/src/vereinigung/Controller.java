@@ -464,8 +464,8 @@ public class Controller extends Application {
 		fireUp.setY(fireUp.getY() - speed);
 		if (player.getY() < 0) {
 			player.setY(0);
-			fireDown.setY(-57);
-			fireUp.setY(196);
+			fireUp.setY(-57);
+			fireDown.setY(196);
 		}
 	}
 
